@@ -1,0 +1,525 @@
+<% layout('../layout') -%>
+<% block('styles', '<link rel="stylesheet" href="/css/my_courses.css' + staticUrlPostfix + '">') -%>
+<% block('styles', '<link rel="stylesheet" href="/css/dashboard.css' + staticUrlPostfix + '">') -%>
+<style>
+    .fade.in {
+        background: rgba(0,0,0,0.4);
+    }
+
+    @media only screen
+    and (max-device-width : 767px) {
+
+        #icon_mail{
+            margin-top: 5px;
+            margin-bottom: 0px;
+            vertical-align: middle;
+            font-size: 24px;
+            line-height: 1px;
+            margin-right: 80px;
+            padding-left: 20px;
+        }
+        #share_lbl{
+            margin-left: 60px;
+            margin-top: -18px;
+        }
+        #purchaseAllBtn{
+            width:200px;;
+        }
+    }
+    @media only screen
+    and (max-device-width : 767px)and (min-width:980px)  {
+    #shareBtn{
+        margin-right: 135px;
+        height: 40px;
+    }
+    }
+
+    @media only screen
+    and (min-device-width : 768px) {
+        #shareBtn{
+            margin-right: 50px;
+            height: 40px;
+            margin-top: 1px;
+        }
+        #icon_mail{
+            margin-top: 5px;
+            margin-bottom: 0px;
+            vertical-align: middle;
+            font-size: 24px;
+            line-height: 1px;
+            margin-right: 80px;
+            padding-left: 20px;
+        }
+        #share_lbl{
+            margin-left: 60px;
+            margin-top: -29px;
+        }
+    }
+    @media only screen
+        and (min-device-width: 768px){
+        #updateBtn{
+            margin-left: 25px;
+            margin-bottom:3px !important;
+        }
+        #onboard_content_instructor {
+            width: 200px;
+        }
+        #onboard_modal_dialog{
+            top: 0 !important;
+        }
+        #footer_button{
+            float:right;
+        }
+    }
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        #updateBtn {
+            margin-bottom: -64px !important;
+        }
+    }
+    @media only screen
+    and (max-device-width : 359px)and (min-width:320px)  {
+        #shareBtn{
+            margin-right: 115px;
+            height: 40px;
+        }
+    }
+
+    @media only screen
+    and (max-device-width : 374px)and (min-width:360px)  {
+        #shareBtn{
+            margin-right: 155px;
+            height: 40px;
+        }
+    }
+    @media only screen
+        and (max-device-width : 450px)and (min-width:380px)  {
+            #clearAll_id{
+                margin-top: 5px;
+                margin-bottom: 2px;
+            }
+    }
+    @media only screen
+    and (max-device-width : 411px)and (min-width:375px)  {
+        #shareBtn{
+            margin-right: 170px;
+            height: 40px;
+        }
+    }
+    @media only screen
+    and (max-device-width : 767px)and (min-width:412px)  {
+        #shareBtn{
+            margin-right: 205px;
+            height: 40px;
+        }
+    }
+    @media only screen
+    and (max-device-width : 768px) {
+        #slide_modal{
+            height :1000px;
+        }
+        #onboard_content_instructor{
+            width:400px;
+        }
+        #onboard_image_instructor{
+
+        }
+        #onboard_modal_dialog{
+            top: 0 !important;
+        }
+        .slide__content{
+            text-align: justify;
+        }
+    }
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+			#onboard_content_instructor {
+				width: 200px;
+			}
+			#onboard_image_instructor img{
+				width:600px;
+			}
+			#onboard_modal_dialog{
+                top: 0 !important;
+            }
+		}
+
+</style>
+
+<div class="banner-alert is-success _display_none">
+    <div class="container">
+        <div class="inner">
+            <div class="banner-alert__icon-col">
+                <i class="icon-checkmark"></i>
+            </div>
+            <div class="banner-alert__text-col prose contained-block">
+                <p><strong></strong><!--<br>The status of your adopted materials will be displayed on this page.--></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="page-content">
+    <div class="container">
+        <div class="content-header content-header--page-header">
+            <div class="content-header__inner">
+                <div>
+                    <h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>My Courses</h1>
+                </div>
+            </div>
+        </div>
+
+        <% if (isStudent) { %>
+        <p class="custom-paragraph">Click below to easily purchase all required and recommended course materials based on your course schedule.</p>
+        <p class="custom-paragraph">Your order can be shipped anywhere, or picked up at your campus store.</p>
+        </br>
+        <p class="custom-paragraph">Click on specific courses below to access videos or digital content that your instructor adopted.</p>
+
+        <% } %>
+
+        <div class="content-header content-header--align-bottom ">
+            <form class="intro container">
+                <div class="content-header__inner">
+                    <div>
+
+                    			<div class="form-group input-width--compact">
+                                       <label for="term-dropdown">Select Term</label>
+                                                 <div class="styled-select">
+                                                    <select id="term-dropdown" name="select" class="form-control">
+
+                                                        </select>
+                                                        </div>
+                                                   </div>
+               <% if (!isConcierge) { %>
+                                 <!--<div>-->
+              <button class="prompt-row__action btn btn-secondary" type="submit" id="updateBtn">Update</button>
+              <!--</div>-->
+
+                    			<% } %>
+
+   <% if (!isStudent) { %>
+                    <!--<div class="share-adoption-checkbox-div">
+                        <input class="share-adoption-check" id ="share-adoption-check" type="checkbox"/>Share Adopted Materials
+                    </div>-->
+                        <div class="share-adoption-checkbox-div" style="float:right">
+                            <button class="btn btn-secondary-alt btn-with-icon" id="shareBtn">
+                                <i class="icon-email" id="icon_mail"></i>
+                                <span id="share_lbl">Share</span>
+                            </button>
+                        </div>
+
+                    <% } %>
+
+
+                    <% if (isConcierge ) { %>
+                        <div>
+  <div id="deptDiv" class="form-group input-width&#45;&#45;compact">
+                              <label id="department-dropdown-label" for="department-dropdown">Select Department</label>
+                              <div class="styled-select">
+                                  <select id="department-dropdown" name="select" class="form-control">
+                                      <%
+                                      var otherUserData = userData.user.data || {};
+                                      var departments = otherUserData.departments || [];
+                                      %>
+                                      <%
+                                      for(var i = 0; i < departments.length; i++) {
+                                          var department = departments[i];
+                                      %>
+                                      <option value="<%=i%>"<% if (department.id === selectedDepartment) { %>selected="selected"<% } %>><%= department.name %></option>
+                                      <% } %>
+                                  </select>
+                              </div>
+  </div>
+                    			<label class="concierge-course-number-search-or" style="margin:20px; color:#152235;font-size: 13px;font-weight: 600">or</label>
+
+ 									<div id="deptDiv" class="form-group input-width&#45;&#45;compact">
+ 									<label id="department-dropdown-label" for="department-dropdown">Enter Courses Number</label>
+ 										<input type="text" id="concierge-course-number-search-input" maxlength="20" name="concierge-course-number-search-input" class="form-control" type="text" style="color: #666;" placeholder=" Ex. 101, 201L">
+ 									</div>
+
+
+                            <button class="prompt-row__action btn btn-secondary" type="submit" id="updateBtn">Update</button>
+
+                        </div>	<% } %>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <% if (isStudent) { %>
+        <p class="custom-paragraph"><button class="btn btn-primary purchase-all-button" id="purchaseAllBtn">Purchase All Materials</button></p>
+        </br>
+        <% } %>
+        <!-- END Course Term Heading module -->
+        <!-- BEGIN Course Grouping module -->
+
+        <!--<div class="container">
+            <h2>Current Term - <span>Fall 2014</span></h2>
+        </div>-->
+        <div id="card-list-container" class="container">
+            <% if (!isStudent) { %>
+
+            <div class="share-adoption-header share-adoptions-component">
+                <div style="float: right; margin: -15px -20px 5px 0"><button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" id="closeModalId">×</button></div>
+                <div class="title">Share Adopted Materials <button class="selectAll" id="selectAll_id" type="button" style = "width:72px">Select All</button> <button class="clearAll" id="clearAll_id" type="button" style = "width:66px">Clear All</button></div>
+                <hr/>
+                <div class="description">Select the course(s) you want to share. A list of adopted course materials for the course(s) you select will be sent to your receipient(s) via email. </div>
+                <div class="title-small">Select Courses</div>
+            </div>
+            <% } %>
+
+            <div class="layout-cards-grid responsive-compress-inner-cards">
+
+                    <div class="general-page-loading loading-animation"></div>
+
+            </div>
+
+            <div class="share-adoption-footer share-adoptions-component">
+                <hr/>
+                <div class="title-small">Enter your recipient(s) email addresses</div>
+                <input type="textbox" id="email-list" placeholder=" bsmith@email.com, jbrown@email.com " class="email-box"/>
+                <div class="email-box-disclaimer">If you want to send to multiple recipients, separate email list with a comma.</div>
+                <hr/>
+                <!--<a class="send" href="#">Send to Recipient(s)</a>-->
+                <button class="send" type="button" disabled="disabled">Send to Recipient(s)</button>
+                <a class="cancel" id="cancelSendRecipientId" href="#" >Cancel</a>
+            </div>
+        </div>
+        <div id="statusModal" class="modal" role="dialog">
+            <div id="status_dialog" class="modal-dialog own-modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <form>
+                        <div class="modal-header" id="status_header">
+                            <button type="button" class="close" data-dismiss="modal" id="closeButton">&times;</button>
+                            <span id="closeText">Close</span>
+                        </div>
+                        <div class="modal-body" id="status_body">
+                            <div class="throbber-container">
+                                <div class="throbber" id="modal-throbber"></div>
+                            </div>
+                            <div class="statusModalText"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal starts -->
+	<div id="attestation-modal" class="modal" role="dialog">
+		<div class="modal-dialog own-modal-dialog" id="attestation-dialog" style="top: 1%;">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form>
+
+					<button type="button" class="modal-close" aria-label="Close" id="closeButton1"><span aria-hidden="true"><i class="icon-close-thin"></i></span></button>
+					<div class="modal-header" style="padding: 36px 0 14px;">
+						<h4 class="modal-title" id="modal-attestation-title">Adoption Request</h4>
+					</div>
+
+					<div class="modal-body" id="attestation_body">
+
+						<div class="modal-scrollable-content block-spaced" style="max-height: 370px;">
+							<div class="block prose">
+								<p><strong>By visiting this site, you accept the information use practices described below. These practices are subject to change. Any changes will be posted on this site and will govern the use of information collected after such postings. We reserve the right to make changes to these terms. Any changes will be posted and will apply only to your use after such posting. If you visit our site, you accept these terms and conditions. </strong></p>
+								<ol>
+									<li>
+										<h4>License:</h4>
+										<p>We grant you a limited license to access our site for your internal business purpose only. Any commercial use, use in violation of the policy of any school represented on the site, or use for data collection and/or profit is not allowed. You are prohibited from using any data mining, robots, or other data gathering tools on this site.</p>
+									</li>
+									<li>
+										<h4>Copyright:</h4>
+										<p>All content on this site, including text, graphics, images, data compilations, lists and software, is the property of  Higher Education Group, Inc. or its licensors and is protected by U.S. and international copyright law. Downloading, printing, copying, distributing or using the contents of any pages in the site in any manner inconsistent with the license granted above and without prior written consent from  is prohibited.</p>
+									</li>
+									<li>
+										<h4>Trademarks:</h4>
+										<p>(r), e(r), edoption(r), ePartner(tm), Rent-A-Text and the other trademarks used on the site are the property of  or a third party who may or may not be affiliated with or sponsored by . You agree not to use the trademarks in any manner that is likely to cause confusion or infringes upon the ownership rights of  or such third party. </p>
+									</li>
+									<li>
+										<h4>Links:</h4>
+										<p> is not responsible for the goods and services, or content of any linked site that is not under 's control. Fol lett will not be liable for any damages caused by your use of or reliance on such goods and services or content.</p>
+									</li>
+									<li>
+										<h4>Arbitration:</h4>
+										<p>You agree to submit any dispute, controversy or claim you may have arising out of or relating to the use of this site solely to binding arbitration in Chicago, Illinois, to be conducted pursuant to the Commercial Rules of the American Arbitration then in effect. </p>
+									</li>
+									<li>
+										<h4>Disclaimer and Limitation of Liability:</h4>
+										<p>Except for the warranties and representations made on the site, TO THE EXTENT PERMITTED BY APPLICABLE LAW,  PROVIDES THIS SITE "AS IS," AND DISCLAIMS ANY AND ALL WARRANTIES, EXPRESS OR IMPLIED, AS TO THE AVAILABILITY OR CONTENT OF THE SITE, OR THE PRODUCTS AND SERVICES PROVIDED BY THE SITE, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  DOES NOT WARRANT OR REPRESENT THAT THIS SITE WILL BE FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.  WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL OR PUNITIVE DAMAGES ARISING FROM USE OF THE SITE. THE DISCLAIMERS AND LIMITATIONS HEREIN MAY NOT APPLY IN CERTAIN STATES. CERTAIN STATE LAWS DO NOT ALLOW LIMITATIONS ON IMPLIED WARRANTIES OR THE EXCLUSION OR LIMITATION OF CERTAIN DAMAGES. IF THESE LAWS APPLY TO YOU, SOME OR ALL OF THE ABOVE DISCLAIMERS, EXCLUSIONS, OR LIMITATIONS MAY NOT APPLY TO YOU, AND YOU MIGHT HAVE ADDITIONAL RIGHTS. </p>
+									</li>
+								</ol>
+							</div>
+							<div class="block prose-additional">
+								<div class="prose">
+									<p><strong>In compliance with State Board Rule 6A-14.092 Textbook Affordability and Section 1004.085, Florida Statutes, I attest for all textbooks and other instructional items that I am adopting will be used, particularly each individual item sold as part of a bundled package, and I have evaluated and confirmed the significant value of changing to a new edition(if applicable) as the prior edition has changed significantly and substantively.</strong></p>
+								</div>
+								<!--<div class="block block-spaced form-group">
+									<div class="option-item option-item&#45;&#45;checkbox option-item&#45;&#45;right-input option-item&#45;&#45;checked-success">
+										<input type="checkbox" name="accept-terms" id="exampleInput1" value="accept-terms_option1" class="enableSubmit__input">
+										<label for="exampleInput1">I accept these terms</label>
+									</div>
+								</div>-->
+								<div class="terms-check">
+									I accept these terms <input type="checkbox" name="terms" id="termCheck">
+								</div>
+							</div>
+						</div>
+
+						<hr/>
+						<div class="button-row">
+							<button  class="btn btn-primary btn-wide enableSubmit__submit" type="button" id="submit_adoption_request">Submit Adoption Request</button>
+							<button type="button" class="cancel" id="cancelButton">Cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+		<!--Modal Ends -->
+
+<!-- END Course Grouping module -->
+
+<!--Onboard modal starts  -->
+<!--welcome modal starts  -->
+<div class="modal fade" id="modal-welcome-instructor" tabindex="-1" role="dialog" aria-labelledby="modal-welcome-title" aria-hidden="true">
+	<div class="modal-dialog" id="onboard_modal_dialog" >
+		<div class="modal-content">
+			<button type="button" class="modal-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="icon-close-thin"></i></span></button>
+			<div class="modal-header -only">
+				<h4 class="modal-title" id="modal-welcome-title"><span class="-only"> Tour</span></h4>
+			</div>
+			<div class="modal-body" id="modal_body">
+				<div class="slider with-dots welcome-slider" id="slickDots">
+					<div id="welcomeSlideInstructor">
+						<div class="slide slide--mega">
+							<h1 class="slide__title"></h1>
+							<img class="slide__bannerImage" c="" />
+							<div class="slide__content prose prose-large contained-block">
+							</div>
+							<div class="slide__footer stacked-items--btn-link">
+								<div>
+									<a href="#" class="btn btn-primary btn-wide slick-next" id="begin_tour_instructor">Begin Tour</a>
+									<a href="#" class="_display_none" id="hiddenBtn">Begin</a>
+								</div>
+								<div>
+									<a href="#" class="text-link" data-dismiss="modal" aria-label="Close">Skip the tour. I&rsquo;ll read this later!</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="onboardSlidesInstructor">
+						<div class="slide">
+							<h1 class="slide__title">Look up materials for your courses</h1>
+							<div class="slide__content">
+								<div class="slide__img-text-layout">
+									<div class="img-col col-stack-xs" id="onboard_image_instructor">
+										<img c="" alt="">
+									</div>
+									<div class="text-col col-stack-xs" id="onboard_content_instructor" style="width:200px;">
+										<div class="prose contained-block">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="slide__footer stacked-items--btn-link" style="width:63%; padding-top:20px" id="footer_button">
+							<div id="footer_element" style="bottom:0; position:absolute !important; top: auto !important;">
+                                <div>
+                                    <a href="#" class="btn btn-primary btn-wide slick-next">Continue</a>
+                                </div>
+                                <div>
+                                    <a href="#" class="text-link" data-dismiss="modal" aria-label="Close">Skip the tour. I&rsquo;ll read this later!</a>
+                                </div>
+                            </div>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--welcome modal ends  -->
+
+
+
+
+
+
+<!-- BEGIN Small Promotional Area module -->
+<% if (!isStudent) { %>
+    <div class="prompt-row prompt-row--text">
+        <div class="container">
+            <div class="prompt-row__content prompt-row__content--3col">
+                <div>
+                    <!--<div>
+                        <h2 class="prompt-row__title">Add Title</h2>
+                        <div class="prompt-row__body prose">Add title not found in Search.</div>
+                        <button class="prompt-row__action btn btn-secondary">Add</button>
+                    </div>-->
+                    <div>
+                        <h2 class="prompt-row__title">Add from Library</h2>
+                        <div class="prompt-row__body prose">Adopt items from past terms or your library.</div>
+                        <a class="prompt-row__action btn btn-secondary" id="add-from-library" href="/copy?from=library">Copy</a>
+                    </div>
+                    <div>
+                        <h2 class="prompt-row__title">Create Content</h2>
+                        <div class="prompt-row__body prose">Create course packs and clear copyright.</div>
+                        <a class="prompt-row__action btn btn-secondary" href="/materials/create" id="create-course-packs">Create</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<%}%>
+<!--promotional-area -->
+
+<%
+if( isStudent && (typeof customer !== 'undefined') && (customer.shoppingListEnabled!=0)){ %>
+  <!--  <div class="prompt-row prompt-row&#45;&#45;image prompt-row&#45;&#45;image&#45;&#45;darken promotional-banner-area-student" >
+        <div class="container">
+            <a href="http://.com/discover/login.cfm" class="prompt-row__large-icon"><span class="icon-circle-bg icon-circle-bg&#45;&#45;large icon-circle-bg&#45;&#45;white-line"><i class="icon-control-play"></i></span></a>
+            <h2 class="prompt-row__title-large">Take a quick tour of  Discover</h2>
+            <a href="http://.com/discover/login.cfm" class="prompt-row__action btn btn-secondary-alt-light btn-wide" target="new">Watch Video</a>
+        </div>
+    </div>-->
+    <div class="shpp-banner container">
+    </div>
+<% } if(!isStudent) {  %>
+    <div class="prompt-row prompt-row--image prompt-row--image--darken promotional-banner-area" >
+        <div class="container">
+            <!--<a href="http://.com/discover/login.cfm" class="prompt-row__large-icon"><span class="icon-circle-bg icon-circle-bg&#45;&#45;large icon-circle-bg&#45;&#45;white-line"><i class="icon-control-play"></i></span></a>-->
+            <h2 class="prompt-row__title-large">Take a quick tour of  Discover</h2>
+            <a href="http://.com/discover/login.cfm" class="prompt-row__action btn btn-secondary-alt-light btn-wide" target="new">Watch Video</a>
+        </div>
+    </div>
+<%}%>
+
+
+
+<!--<% if (false && isStudent) { %>
+	<section class="buyback-banner">
+		<div>
+			<a href="http://www..com/webapp/wcs/stores/servlet/BuybackInfoView?langId=-1&catalogId=10001&storeId=<%- userData.user.store || '10051' %>&demoKey=d&cm_mmc=StudentDiscover-_-<%- userData.user.realm %>-_-NA-_-NA"><img c="/img/books-buyback-banner.jpg" alt="We buy back your books!" /></a>
+		</div>
+	</section>
+<% } else {
+if( (typeof customer !== 'undefined') && (customer.shoppingListEnabled!=0)){ %>
+            <section class="promotional-area-shpp">
+                <div class="shpp-banner container">
+                </div>
+            </section>
+        <% } else {  %>
+            <section class="promotional-area-small">
+                <div class="content image-right">
+                    <h2>Interactive Learning</h2>
+                    <p>Easily manage all your course materials. <a class="caret-link" href="#"><span>Start Now</span></a></p>
+                </div>
+            </section>
+<%          }
+}%>-->
+
+
+
+<% block('scripts', '<script>ffd.isStudent = ' + JSON.stringify(isStudent) + '; ffd.terms = ' + JSON.stringify(terms) + '; ffd.shoppingListUri = ' + JSON.stringify(shoppingList) + ';</script> <script c="/js/courses/my_courses.js'+ staticUrlPostfix + '"></script>') -%>
+<% block('scripts', '<script c="/js/adoption_report/jquery.blockUI.js'+ staticUrlPostfix + '"></script>') -%>
+<% block('scripts', '<script c="/js/lib/bootbox.min.js'+ staticUrlPostfix + '"></script>') -%>
