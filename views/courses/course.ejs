@@ -1,0 +1,490 @@
+<% layout('../layout') -%>
+<% block('styles', '<link rel="stylesheet" href="/css/course.css' + staticUrlPostfix + '">') -%>
+<style>
+    #manage_by_sec_modal{
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #cccccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+        box-sizing: border-box;
+        margin: 0 auto;
+        padding: 30px;
+        position: relative;
+        width: 600px;
+        max-width: 100%;
+        min-height: 160px;
+        top: 30%;
+        z-index: 1050;
+    }
+    #manage_by_sec_modal > h3{
+        font-family:open sans;
+        line-height: 1.42857143;
+    }
+    #manage_by_sec_modal .btn.btn-primary{
+        font-family:open sans;
+    }
+@media only screen
+		and (max-device-width : 377px) and (min-device-width : 360px){
+			#materialRemoveYes{
+                margin-left: 1%;
+			}
+			#materialRemoveNo{
+                margin-left: 0%;
+            }
+
+}
+@media only screen
+		and (max-device-width : 359px) {
+			#materialRemoveYes{
+                margin-left: 12%;
+                width:30%;
+			}
+			#materialRemoveNo{
+                margin-left: 10%;
+                width:30%;
+            }
+
+}
+@media only screen
+		and (min-device-width : 378px) and (max-device-width : 429px){
+			#materialRemoveYes{
+                margin-left: 5%;
+			}
+			#materialRemoveNo{
+                margin-left: 1%;
+            }
+
+}
+@media only screen
+		and (min-device-width : 430px) {
+			#materialRemoveYes{
+                margin-left: 15%;
+			}
+			#materialRemoveNo{
+                margin-left: 17%;
+            }
+
+}
+@media only screen
+		and (min-device-width : 768px){
+    .promotional-area-small .content {
+        max-width: 1220px;}
+}
+@media only screen
+and (max-device-width : 767px) {
+    .promotional-area-small .content {
+        max-width: 90%;
+        padding-left: 5%;}
+}
+.special-instructions #special-instructions-toggle::after{
+    content: none;
+}
+</style>
+<!-- END Primary Nav module -->
+<div class="breadcrumbs-wrapper">
+	<div class="container breadcrumbs">
+		<ol>
+			<li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <% if(isStudent){ %>
+            <li class="active" style="font-weight: bold">Course Materials</li>
+            <% }else{ %>
+            <li class="active" style="font-weight: bold">Adopted Course Materials</li>
+            <% } %>
+		</ol>
+	</div>
+</div>
+
+<div class="banner-alert is-success _display_none">
+	<div class="container">
+		<div class="inner">
+			<div class="banner-alert__icon-col">
+				<i class="icon-checkmark"></i>
+			</div>
+			<div class="banner-alert__text-col prose contained-block">
+            <p><strong></strong><br>The status of your adopted materials will be displayed on this page.</p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="banner-alert is-error _display_none">
+	<div class="container">
+		<div class="inner">
+			<div class="banner-alert__icon-col">
+				<i class="icon-checkmark"></i>
+			</div>
+			<div class="banner-alert__text-col prose contained-block">
+            <p><strong></strong><br>The status of your adopted materials will be displayed on this page.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- BEGIN Course Title Heading module -->
+
+<div class="page-content">
+   <div class="container" id="materialContainer">
+      <!-- Style guide > Page header -->
+      <div class="content-header content-header--page-header">
+			<div class="content-header__inner">
+				<div>
+                    <% if(isStudent){ %>
+                    <h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>Course Materials</h1>
+                    <% }else{ %>
+                    <h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>Adopted Course Materials</h1>
+                    <% } %>
+				</div>
+				<div><a id="manageBySectionStyle" style="text-decoration:underline">Manage by Section</a></div>
+			</div>
+	  </div>
+
+    <div class="content-header content-header--align-middle  content-header--subject _display_none" id="subjectHeader" style="border-bottom: 1px solid #e6e6e6">
+        <div class="content-header__inner">
+            <div>
+                <div class="subject-header">
+                    <h2 class="subject-header__title"><%= pageData.course.description %></h2>
+                    <div class="subject-header__subtitle"><%= pageData.course.shortName %></div>
+            <% if (!isStudent) { %>
+                    <dl class="subject-header__info dl dl--stacked" id="discipline_subject_noDropDown" style="margin-bottom:10px;margin-top:20px">
+                        <dt>Discipline: </dt>
+                        <dd id="dd_discipline"></dd>
+                        <dt>Subject: </dt>
+                        <dd id="dd_subject"></dd>
+
+                    </dl>
+            <%  } %>
+                </div>
+             <% if (!isStudent) { %>
+                <div>
+                    <button class="prompt-row__action btn btn-secondary" type="submit" id="updateBtn">Update</button>
+                </div>
+             <%  } %>
+            </div>
+
+        </div>
+    </div>
+	<% if (!isStudent) { %>
+
+
+    <div class="_display_none" id="disciplineAndSubject" style="margin-top:20px">
+        <div id="discipline" class="form-group input-width&#45;&#45;compact">
+            <label id="discipline-dropdown-label" for="discipline-dropdown">Discipline</label>
+            <div class="styled-select">
+                <select id="discipline-dropdown" name="select" class="form-control">
+                    <%
+                    var otherUserData = userData.user.data || {};
+                    var disciplines = otherUserData.disciplines || [];
+                    %>
+                    <%
+                    for(var i = 0; i < disciplines.length; i++) {
+                        var discipline = disciplines[i];
+                    %>
+                    <option value="<%=i%>"<% if (discipline.id === selectedDiscipline) { %>selected="selected"<% } %>><%= discipline.name %></option>
+                    <% } %>
+                </select>
+            </div>
+        </div>
+        <div class="form-group input-width--compact">
+            <label for="subject-dropdown">Subject</label>
+            <div class="styled-select">
+                <select id="subject-dropdown" name="select" class="form-control">
+                     <%
+                        var otherUserData = userData.user.data || {};
+                        var subjects = otherUserData.subjects || [];
+                        %>
+                        <%
+                        for(var i = 0; i < subjects.length; i++) {
+                            var subject = subjects[i];
+                        %>
+                        <option value="<%=i%>"<% if (subject.id === selectedSubject) { %>selected="selected"<% } %>><%= subject.name %></option>
+                        <% } %>
+                </select>
+            </div>
+        </div>
+    </div>
+    <% } %>
+<!-- END Course Title Heading module -->
+
+
+<!-- BEGIN Material Group module -->
+
+      <div class="layout-cards-grid responsive-compress-inner-cards _display_none">
+            <div class="card card--book card--grouped-sections">
+               <div class="card__lozenge card__lozenge--visible lozenge is-adopted">Adopted</div>
+               <div class="card__inner">
+                  <button aria-label="Remove" class="card__remove"><i aria-hidden="true" class="icon-close-thin"></i></button>
+                  <div class="card__header">
+                     <h1 class="card__title is-truncated" style="word-wrap: break-word;">Egypt, Greece, and Rome: Civilizations of the Ancient lorem... </h1>
+                     <div class="card__subtitle"><strong>ISBN:</strong> 12345678900001</div>
+                  </div>
+                  <div class="card__body">
+                     <div class="book book--detailed">
+                        <div class="book__image-col">
+                           <img src="http://placehold.it/128x175" alt="" class="book__image">
+                           <div class="book__format">Hardcover</div>
+                        </div>
+                        <div class="book__text-col">
+                           <div class="book__edition">
+                              3 Edition, 6 Book
+                           </div>
+                           <div class="book__source" style="word-wrap: break-word;">
+                              <strong>Author(s):</strong> Charles Freeman, Charles Freeman
+                           </div>
+                           <div class="book__source" style="word-wrap: break-word;">
+                              <strong>Publisher:</strong> Oxford University Press, Freedling and Co
+                           </div>
+              	            <div class="book__rating">
+                                     <div class="star-rating read-only md jq-ry-container" data-value="3" readonly="readonly" style="width: 60px;">
+                                        <div class="jq-ry-group-wrapper" id="ratingwrapper">
+                                           <div class="jq-ry-normal-group jq-ry-group">
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#A8AEB8">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#A8AEB8" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#A8AEB8" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#A8AEB8" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#A8AEB8" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+                                           </div>
+                                           <div class="jq-ry-rated-group jq-ry-group" style="width: 50%;">
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#F5CA70">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#F5CA70" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#F5CA70" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#F5CA70" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+
+                                              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" width="12px" height="12px" fill="#F5CA70" style="margin-left: 0px;">
+                                                 <polygon id="star-icon" points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566 "></polygon>
+                                              </svg>
+                                           </div>
+                                        </div>
+                                     </div>
+                            </div>
+                           <div class="book__badges">
+                              <ul class="badge-list">
+                                 <li class="book-badge book-badge--rental">Rental</li>
+                                 <li class="book-badge book-badge--brytewave">Brytewave</li>
+                                 <li class="book-badge book-badge--pre-approved">Pre Approved</li>
+                              </ul>
+                           </div>
+                           <div class="book__status">
+                              <strong>Previously Adopted: </strong><br>Spring 2014
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="card__footer">
+                     <div class="inner">
+                        <a href="#" class="btn btn-block btn-primary">View Details</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+			<div class="card__inner__dot _display_none" style="height: 300px;">
+
+        		<div class="card__body">
+        			<h1 class="card__title is-truncated" style="word-wrap: break-word;">You have not adopted any materials for this course.</h1>
+        		<div class="inner">
+        				<a href="<%= paths.discoverCourse.replace(':courseId', courseId) %>" class="btn btn-block btn-primary">Discover for this course</a>
+        			</div>
+        		</div>
+        	</div>
+
+      </div>
+
+
+</div></div> <!-- NEED TO MOVE THESE TWO DIV END TAGS TO END OF CONTENT SECTION -- REFER department.ejs -->
+
+<!-- END Material Group module -->
+
+<% if (!isStudent) { %>
+    <div class="prompt-row prompt-row--text">
+        <div class="container">
+            <div class="prompt-row__content prompt-row__content--3col" style="height: auto;">
+                <div>
+                    <div>
+                        <h2 class="prompt-row__title">Add Title</h2>
+                        <div class="prompt-row__body prose">Add title not found in Search.</div>
+                        <a class="prompt-row__action btn btn-secondary" id="add-title-material" href="<%= paths.renderAddTitleToCourse.replace(':courseId', courseId) %>">Add</a>
+                    </div>
+                    <div>
+                        <h2 class="prompt-row__title">Add from Library</h2>
+                        <div class="prompt-row__body prose">Adopt items from past terms or your library.</div>
+                        <a class="prompt-row__action btn btn-secondary" id="add-from-library" href="<%= paths.getCopyMaterials %>?from=library">Copy</a>
+                    </div>
+                   <% if (!isConcierge) {
+							var exists = 0;
+							var ids = JSON.parse(realms);
+							while (ids.length > 0) {
+							var check = ids.pop();
+							if (customer.id == check) {
+								exists++;
+											}
+									}
+							if (exists < 1) { %>
+								<div >
+									<h2 class="prompt-row__title">Create Content</h2>
+									<div class="prompt-row__body prose">Create course packs and clear copyright.</div>
+									<a class="prompt-row__action btn btn-secondary" id="create-course-packs">Create</a>
+								</div>
+							<% } %>
+					<% } %>
+                </div>
+                <div>
+                     <div>
+						<h2 class="prompt-row__title">Add My Content</h2>
+						<div class="prompt-row__body prose">Upload and create course materials.</div>
+						<a class="prompt-row__action btn btn-secondary" id="add-my-content"  tabindex=0 onClick="addMaterialWithParameters();">Add</a>
+					</div>
+					<% if (isInstructor && customer.id == 'tcu') {  %>
+					<div>
+						<h2 class="prompt-row__title">TCU Library Resources</h2>
+						<div class="prompt-row__body prose">Browse TCU's library to find materials to use for your course.</div>
+						<a class="prompt-row__action btn btn-secondary" id="view-tcu-library-content"  tabindex=0 href="https://tcu.summon.serialssolutions.com/search?s.q=#!/search?ho=t&fvf=IsFullText,true,f&l=en&q=" target="_blank" onClick="ga('send','event','TCU','Click','TCU Browse');">Browse</a>
+					</div>
+
+					<% } else if (!isConcierge) { %>
+					<div></div>
+					<% } %>
+
+					<div>
+						<h2 class="prompt-row__title">Discover Course Materials</h2>
+						<div class="prompt-row__body prose">Find new materials for this course.</div>
+						<a class="prompt-row__action btn btn-secondary" id="discover-course-material" href="<%= paths.discoverCourse.replace(':courseId', courseId) %>">Discover</a>
+					</div>
+
+				</div>
+            </div>
+        </div>
+    </div>
+<%}%>
+
+<!-- BEGIN Special Instructions module -->
+<div>
+<section class="special-instructions prompt-row--text" style="padding: 3%;">
+	<div class="container">
+		<h2>Student Instructions</h2>
+		<% if (!isStudent) { %>
+			<h3>Provide information about course materials usage.</h3>
+		<% } %>
+		<div id="special-instructions-content">
+			<p id="special-instructions-body" tabindex="0" class="empty" style="color:black;font-size:13px;">You have not provided instructions for this course.</p>
+			<a class="prompt-row__action btn btn-secondary" href="#" id="special-instructions-toggle" aria-expanded="false" style="text-transform:none">Add</a>
+		</div>
+		<% if (!isStudent) { %>
+			<form action="#" id="special-instructions-form">
+			    <label for="special-instructions-text">Provide Student Instructions: </label>
+				<textarea id="special-instructions-text" aria-multiline="true" name="special-instructions"></textarea>
+				<input type="submit" value="Save" class="prompt-row__action btn btn-secondary" style="margin-top: 20px;">
+			</form>
+		<% } %>
+	</div>
+</section>
+</div>
+<!-- END Special Instructions module -->
+
+
+<% if (!isStudent) { %>
+	<!-- BEGIN Material Group module -->
+	<section class="material-grouping history _display_none">
+		<div class="container">
+			<h2>Other Items for This Subject</h2>
+			<a class="caret-link" href="/courses/<%= courseId %>/discover" style="margin-top: 0px;"><span>View All</span></a>
+			<p></p>
+			<div  class="mobile-carousel" >
+				<ul class="material-list ">
+					<li class="col-xs-4 col-sm-3"><!-- BEGIN Material List Item module -->
+						<article class="material-item ">
+							<div class="row-fluid">
+								<div class="col-xs-12 no-pad">
+									<a href="/courses/microbiology/materials/microbiology02/details"><img src="/img/biology-book02.jpg" alt="Exploring Biology textbook cover" class="material-image" /></a>
+								</div>
+								<h3><a href="/courses/microbiology/materials/microbiology02/details">Exploring Biology</a></h3>
+							</div>
+						</article>
+						<!-- END Material List Item module --></li>
+					<li class="col-xs-4 col-sm-3"><!-- BEGIN Material List Item module -->
+						<article class="material-item ">
+							<div class="row-fluid">
+								<div class="col-xs-12 no-pad">
+									<a href="/courses/microbiology/materials/microbiology02/details"><img src="/img/anatomy-book01.jpg" alt="Anatomy Coloring Book cover" class="material-image" /></a>
+								</div>
+								<h3><a href="/courses/microbiology/materials/microbiology02/details">Anatomy Coloring Book</a></h3>
+							</div>
+						</article>
+						<!-- END Material List Item module --></li>
+					<li class="col-xs-4 col-sm-3"><!-- BEGIN Material List Item module -->
+						<article class="material-item ">
+							<div class="row-fluid">
+								<div class="col-xs-12 no-pad">
+									<a href="/courses/microbiology/materials/microbiology02/details"><img src="/img/microbiology-book01.jpg" alt="Microbiology textbook cover" class="material-image" /></a>
+								</div>
+								<h3><a href="/courses/microbiology/materials/microbiology02/details">Microbiology</a></h3>
+							</div>
+						</article>
+						<!-- END Material List Item module --></li>
+						<li class="col-xs-4 col-sm-3"><!-- BEGIN Material List Item module -->
+						<article class="material-item ">
+							<div class="row-fluid">
+								<div class="col-xs-12 no-pad">
+									<a href="/courses/microbiology/materials/microbiology02/details"><img src="/img/biology-book03.jpg" alt="Biology textbook cover" class="material-image" /></a>
+								</div>
+								<h3><a href="/courses/microbiology/materials/microbiology02/details">Biology</a></h3>
+							</div>
+						</article>
+						<!-- END Material List Item module --></li>
+				</ul>
+			</div>
+		</div>
+	</section>
+	<!-- END Material Group module -->
+<% } %>
+
+<!-- BEGIN Promotional Area Small module -->
+
+<div class="material-remove fade _display_none" id="removeMaterial" role="dialog">
+	<div class="material-remove-dialog">
+		<a class="esc" id="close_modal">x</a>
+		<h3 style="margin-bottom:20px;">Remove this material from adopted course list?</h3>
+		<div class="material-remove-options">
+        <!--<a id="materialRemoveYes" >Yes</a>
+        <a id="materialRemoveNo" >No</a>-->
+			<button type="button" class="btn btn-primary" id="materialRemoveYes">Yes</button>
+			<button type="button" class="btn btn-primary" id="materialRemoveNo">No</button>
+		</div>
+	</div>
+</div>
+
+
+<section class="promotional-area-small" style="padding:0px;background:white;">
+	<div class="content image-right">
+		<h2>A smarter way to research and adopt</h2>
+		<p><a class="caret-link" href="https://www..com/" target="_new"><span>Learn more</span></a></p>
+	</div>
+</section>
+
+<!-- END Promotional Area Small component -->
+<% block('scripts', '<script>ffd.pageData = ' + JSON.stringify(pageData || {}) + ';ffd.isStudent = ' + JSON.stringify(isStudent) + '; ffd.adoptedMaterial = ' + JSON.stringify(adoptedMaterial) + '; ffd.statusVal = ' + JSON.stringify(statusVal) + '</script> <script src="/js/courses/course.js'+ staticUrlPostfix + '"></script>') -%>
+<!-- block('scripts', '<script>ffd.pageData = ' + JSON.stringify(pageData || {}) + ';ffd.isStudent = ' + JSON.stringify(isStudent) + '; ffd.adoptedMaterial = ' + JSON.stringify(adoptedMaterial) + '</script> <script src="/js/courses/course.js'+ staticUrlPostfix + '"></script>')  -->
