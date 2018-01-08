@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lt-ie9 no-js" lang="en"><![endif]-->
+<!--[if !IE]><!-->
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/html"><!--<![endif]-->
+<head>
+	<script>(function(H){H.className=H.className.replace(/\bno-js\b/,'')})(document.documentElement)</script>
+	<% if(typeof pageTitle !== 'undefined'){
+		if(pageTitle==='My Courses' && userRole==='student')
+			pageTitle = 'Student Dashboard';
+		if(pageTitle==='My Courses' && userRole==='instructor')
+			pageTitle = 'Instructor Dashboard';
+		if(pageTitle==='My Courses' && userRole==='concierge')
+			pageTitle = 'Concierge Dashboard';
+		if(pageTitle==='Instructor Dashboard' && userRole==='concierge')
+			pageTitle = 'Concierge Dashboard';
+		if(pageTitle==='My Departments' && userRole==='administrator')
+			pageTitle = 'Administrator Dashboard';
+		if(pageTitle==='Faculty Discovery Help' && userRole==='student')
+			pageTitle = 'Student Discover Help';
+		if(pageTitle==='Faculty Discovery Help' && userRole==='instructor')
+			pageTitle = 'Faculty Discover Help';
+		if(pageTitle==='Faculty Discovery Help' && userRole==='concierge')
+			pageTitle = 'Concierge Discover Help';
+		if(pageTitle==='Faculty Discovery Help' && userRole==='administrator')
+			pageTitle = 'Administrator Discover Help';
+	} %>
+	<title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' - ' : '' %> Discover</title>
+	<meta charset="utf-8" />
+	<meta name="google-site-verification" content="GooGhywoiu9839t543j0s7543uw1"/>
+	<meta charset = "utf-8" content="GooGhywoiu9839t543j0s7543uw1.Please add egroup@gmail.com to GA account UA-56445464 with &quot;Manage Users and Edit&quot; permissions - date 21st July&apos;15" name="google-site-verification"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" type="text/css" href="/css/tooltipster.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/tooltipster-shadow.css"/>
+	<link rel="stylesheet" href="/css/jquery-ui.min.css<%= staticUrlPostfix %>">
+	<link rel="stylesheet" href="/css/global.min.css<%= staticUrlPostfix %>">
+	<link rel="stylesheet" href="/css/common.css<%= staticUrlPostfix %>">
+	<link rel="stylesheet" type="text/css" href="/css/authentication/bootstrap-iso.css<%= staticUrlPostfix %>">
+
+	<% block('styles', '<link rel="stylesheet" href="/css/pattern.css' + staticUrlPostfix + '">') -%>
+	<% block('styles', '<link rel="stylesheet" href="/css/style.min.css' + staticUrlPostfix + '">') -%>
+	<link rel="stylesheet" href="/css/dashboard.css<%= staticUrlPostfix %>">
+    <link rel="stylesheet" href="/css/departments/my_departments.css<%= staticUrlPostfix %>">
+	<%-blocks.styles%>
+	<!--[if lt IE 9]>
+	<script src="/js/lib/html5shiv.js"></script>
+	<![endif]-->
+	<style>
+		a:focus{
+			outline: 0;
+			color: #00338d;
+		}
+		#msg_center:focus{
+			outline: 0;
+			color: #FFFFFF;
+		}
+		#profile-actions-dropdown:focus{
+			outline: 0;
+			color: #FFFFFF;
+		}
+		#logout_btn:hover{
+			background-color:#075BB2 !important;
+		}
+		@media all and (-ms-high-contrast:none)
+		{
+		/*	*::-ms-backdrop, #msg_center { padding-top: 8px; } /* IE11 */
+
+		}
+		@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+			/* IE10+ CSS styles go here */
+			body{
+				font-family: Arial;
+			}
+		}
+		#adp_footer:hover{
+			text-decoration: underline !important;
+		}
+		#adp_footer{
+			text-decoration: underline !important;
+		}
+
+		#dep_footer:hover{
+			text-decoration: underline !important;
+		}
+		#dep_footer{
+			text-decoration: underline !important;
+		}
+		#lib_footer:hover{
+			text-decoration: underline !important;
+		}
+		#lib_footer{
+			text-decoration: underline !important;
+		}
+		#crs_footer:hover{
+			text-decoration: underline !important;
+		}
+		#crs_footer{
+			text-decoration: underline !important;
+		}
+		#hlp_footer:hover{
+			text-decoration: underline !important;
+		}
+		#hlp_footer{
+			text-decoration: underline !important;
+		}
+		#lgl_footer:hover{
+			text-decoration: underline !important;
+		}
+		#lgl_footer{
+			text-decoration: underline !important;
+		}
+		.fade.in {
+			background: rgba(0,0,0,0.4);
+		}
+
+		@media only screen
+		and (min-device-width : 768px) {
+			#searchArea{
+				width: 320px;
+				margin-left: -40px;
+			}
+			#onboard_content {
+				width: 200px;
+			}
+			#onboard_modal_dialog{
+                top: 0 !important;
+            }
+			#footer_button{
+			float:right;
+			}
+		}
+
+		@media only screen
+		and (max-device-width : 767px) {
+			#slide_modal{
+				height :1000px;
+			}
+			#onboard_image{
+
+			}
+			#onboard_modal_dialog{
+                top: 0 !important;
+            }
+			.slide__content{
+				text-align: justify;
+			}
+		}
+
+		@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+			#onboard_content {
+				width: 200px;
+			}
+			#onboard_image img{
+				width:600px;
+			}
+			#onboard_modal_dialog{
+			    top: 0 !important;
+			}
+		}
+
+	</style>
+</head>
+<body onload="firstFocus()">
+
+
+<!-- BEGIN Dashboard Template -->
+<!-- BEGIN Utility Nav module -->
+
+<header class="siteHeader hidden-xs">
+	<div class="siteHeader__bar--top">
+		<div class="container">
+			<div class="siteHeader__bar__inner">
+				<div>
+					<div class="siteHeader__info">
+						<div class="dividedGroup dividedGroup--bull">
+							<a href="/" tabindex="1" id="home_btn" style="outline: none;">
+                            <%
+                                var logo_image, logo_role_text, alt_text;
+                                logo_image = "logo-header.png";
+                                 switch (userRole) {
+                                    case 'instructor':
+                                        logo_role_text = "Instructor";
+                                        alt_text = " Discover";
+                                        break;
+                                    case 'student':
+                                        logo_role_text = "Student";
+                                        alt_text = " Discover";
+                                        break;
+                                    case 'administrator':
+                                        logo_role_text = "Administrator";
+                                        alt_text = " Administrator Discover";
+                                        break;
+                                    case 'concierge':
+                                        logo_role_text = "Concierge";
+                                        alt_text = " Concierge Discover";
+                                        break;
+                                    default:
+                                        alt_text = " Discover"
+                                        logo_role_text = "";
+                                        break;
+                            }%>
+                            <img src="/img/<%=logo_image%>" alt="<%=alt_text%>" class="siteHeader__info__logo" />
+                            </a>
+							<span class="dividedGroup__divider" style="padding-top:5px;">•</span>
+							<h1 class="siteHeader__info__university" style="padding-top:5px;"><%= (typeof userData !== 'undefined') && userData.customer && userData.customer.name ? userData.customer.name : ''%></h1>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="siteHeader__profileActions" style="width: 500px;">
+						<div class="dividedGroup dividedGroup--line">
+
+							<% if (!isStudent && (typeof userData !== 'undefined')){ %>
+
+							<a href="<%= paths.messageCenter%>" class="siteHeader__profileActions__link" tabindex="2" id="msg_center" style="padding-top: 5px;">Message Center
+							<span class="badge badge--after-text" style="vertical-align: middle;" ><% if ((typeof userData !== 'undefined') &&
+										userData.messageCenter && userData.messageCenter.unreadMessagesCount &&
+										userData.messageCenter.unreadMessagesCount > 0) { %><span class="badge badge--after-text">
+							<%= userData.messageCenter.unreadMessagesCount %> <span class="sr-only">messages</span></span>
+								<% } %></span></a>
+							<% } %>
+
+							<% if ((typeof userData !== 'undefined') &&
+									userData.messageCenter && userData.messageCenter.unreadMessagesCount &&
+									userData.messageCenter.unreadMessagesCount > 0){ %>
+							<span class="dividedGroup__divider" style="padding-top: 6px;">|</span>
+							<div class="dropdown" style="padding-top:6px;">
+							<% }else{
+
+								if(!isStudent) { %>
+
+								<span class="dividedGroup__divider" style="padding-top: 6px;">|</span>
+								<% } %>
+
+
+								<div class="dropdown" style="padding-top: 6px;">
+							<% } %>
+
+								<% if (userRole === 'administrator' || userRole === 'concierge') {%>
+
+
+									<a class="nav-dropdown-trigger siteHeader__profileActions__link"
+									   id="profile-actions-dropdown" type="button" data-toggle="dropdown"
+									   aria-haspopup="true" aria-expanded="false" tabindex="3" style="vertical-align: middle;">
+
+
+									<% }else{ %>
+
+
+
+										<a class="nav-dropdown-trigger siteHeader__profileActions__link"
+										   id="profile-actions-dropdown" type="button" data-toggle="dropdown"
+										   aria-haspopup="true" aria-expanded="false" tabindex="3" style="vertical-align: middle;">
+
+
+
+										<% } %>
+										Hi, <%=logo_role_text %>
+										<%= (typeof userData !== 'undefined')
+										&& userData.user ? userData.user.nameToShow : 'Guest'%></a>
+									<ul class="dropdown-menu dropdown-menu--right dropdown-menu--wide"
+										aria-labelledby="profile-actions-dropdown" >
+										<% if (userRole === 'administrator' || userRole === 'concierge') {%>
+										<li><a href="<%= paths.accountSettings %>" class="iconNavLink" id="settingsLink"><span class="iconNavLink__icon-wrapper"><i class="icon-gears"></i></span>Settings</a></li>
+										<li id ="changeRoleLink"><a href="#" class="change-Role">Change Role</a></li>
+										<%}%>
+										<li><a href="/help" class="iconNavLink" id="help_link"><span class="iconNavLink__icon-wrapper"><i class="icon-help-circle"></i></span>FAQs</a></li>
+										<li>
+											<div class="dropdown-menu__btn-wrapper">
+												<% if (userRole === 'concierge') {%>
+												<a href="<%= paths.logOut %>" class="btn btn-primary" id="logout_btn" style="padding-top: 8px;" onblur="dropdownDismissedC()">Log Out</a>
+												<% }
+												else if(userRole === isAdministrator){ %>
+												<a href="<%= paths.logOut %>" class="btn btn-primary" id="logout_btn" style="padding-top: 8px;" onblur="dropdownDismissedA()">Log Out</a>
+												<% }else{ %>
+
+												<a href="<%= paths.logOut %>" class="btn btn-primary" id="logout_btn" style="padding-top: 8px;" onblur="dropdownDismissed()">Log Out</a>
+												<% } %>
+											</div>
+										</li>
+									</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="siteHeader__bar--bottom">
+		<div class="container">
+			<div class="siteHeader__bar__inner">
+				<div>
+					<% if (typeof marketingSection !== 'undefined') { %>
+					<nav class="siteHeader__nav" >
+						<ul>
+							<li id="marketingDashboard"><a class="navlink" href="/marketing" style="text-decoration:none">Marketing Dashboard</a></li>
+						</ul>
+					</nav>
+					<% } else if (isStudent){ %>
+					<nav class="siteHeader__nav" >
+						<ul>
+							<li id="studentMyCourse"><a class="navlink" href="/my_courses" style="text-decoration:none" id="myCourses">My Courses</a></li>
+							<% if( (typeof customer != 'undefined') && (customer.shoppingListEnabled!=0)){ %>
+							<li id="myMaterialList"><a class="navlink" href="#" onclick="onShoppingListButtonClick();" style="text-decoration:none">My Materials List</a></li>
+							<% } %>
+						</ul>
+					</nav>
+					<% } else { %>
+
+					<nav class="siteHeader__nav" >
+						<ul>
+							<% if (isAdministrator) { %>
+							<li id="myDepartment"><a class="navlink" href="/my_departments" style="text-decoration:none" tabindex="4" id="myDeptID">My Departments</a></li>
+							<% } %>
+							<% if (userRole === 'concierge' || isAdministrator) {%>
+							<% if (userRole === 'concierge'){%>
+							<li id="myCourses"><a class="navlink" href="/my_courses" style="text-decoration:none" tabindex="4">My Courses</a></li>
+							<li id="myLibrary"><a class="navlink" href="/my_library" style="text-decoration:none" tabindex="5">My Library</a></li>
+							<li id="myAdoptionDashboard"><a class="navlink" href="#" onclick="loadReport();" tabindex="6" id="myAdp" style="text-decoration: none">My Adoption Dashboard</a></li>
+							<%}else{ %>
+							<li id="myLibrary"><a class="navlink" href="/my_library" style="text-decoration:none" tabindex="5">My Library</a></li>
+							<li id="myAdoptionDashboard"><a class="navlink" href="#" onclick="loadReport();" tabindex="6" style="text-decoration: none">My Adoption Dashboard</a></li>
+							<%
+							}
+							%>
+							<%} else { %>
+							<li id="myCourses"><a class="navlink" href="/my_courses" style="text-decoration:none" tabindex="4">My Courses</a></li>
+							<li id="myLibrary"><a class="navlink" href="/my_library" style="text-decoration:none" tabindex="5">My Library</a></li>
+							<% } %>
+
+
+						</ul>
+					</nav>
+					<% } %>
+
+				</div>
+				<div>
+					<% if (!isStudent) { %>
+					<div class="siteHeader__search">
+						<form action="/materials/search" method="GET" role="search" id="material-search-form">
+							<div class="input-btn-group input-width--compact-with-btn">
+								<div>
+									<div class="input-with-icon-wrapper has-icon-left" id="searchArea">
+										<input type="text" id="primary-search-input" name="query" class="form-control" placeholder="Enter keyword, author, title or 13-digit ISBN" tabindex="6">
+										<div class="icon-wrapper">
+											<i class="icon-search" style="padding-left: 10px;"></i>
+										</div>
+									</div>
+								</div>
+								<div>
+									<button type="submit" class="btn btn-secondary btn-thin" tabindex="7">Go</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<% } %>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<div class="mobileSiteHeader visible-xs">
+	<div class="inner">
+		<a class="mobileSiteHeader__nav-trigger mobileSiteHeader__action mobileSiteHeader__action--left" data-toggle="collapse" data-target="#mobileNav" aria-expanded="false">
+			<i class="icon-bars expanded-hide"></i>
+			<i class="icon-close-thin expanded-show"></i>
+		</a>
+		<!--<div class="mobileSiteHeader__logo">
+			<a href="https://online-pattern-library.discover.com/"><img src="./ Discover Pattern Library_files/logo-header.png" alt=" | Discover" class="siteHeader__info__logo">
+				<h1 class="siteHeader__info__university"><%= (typeof userData !== 'undefined') && userData.customer && userData.customer.name ? userData.customer.name : ''%></h1>
+			</a>
+		</div>-->
+		<div class="mobileSiteHeader__logo">
+			<a href="/" tabindex="1">
+				<%
+				var logo_image, logo_role_text, alt_text;
+				logo_image = "logo-header.png";
+				switch (userRole) {
+					case 'instructor':
+						logo_role_text = "Instructor";
+						alt_text = " | Discover";
+						break;
+					case 'student':
+						logo_role_text = "Student";
+						alt_text = " | Discover";
+						break;
+					case 'administrator':
+						logo_role_text = "Administrator";
+						alt_text = " | Administrator Discover";
+						break;
+					case 'concierge':
+						logo_role_text = "Concierge";
+						alt_text = " | Concierge Discover";
+						break;
+					default:
+						alt_text = " | Discover"
+						logo_role_text = "";
+						break;
+				}%>
+				<img src="/img/<%=logo_image%>" alt="<%=alt_text%>" class="siteHeader__info__logo">
+				<h1 class="siteHeader__info__university"><%= (typeof userData !== 'undefined') && userData.customer && userData.customer.name ? userData.customer.name : ''%></h1>
+			</a>
+		</div>
+		<% if (!isStudent) { %>
+		<div class="mobileSiteHeader__search-wrapper">
+			<form action="/materials/search" method="GET" role="search" id="material-search-form">
+				<div class="input-with-icon-wrapper has-icon-left">
+					<input type="search" id="primary-search-input" name="query" class="form-control" placeholder="Enter keyword, author, title or 13-digit ISBN">
+					<div class="icon-wrapper">
+						<i class="icon-search"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+		<% } %>
+	</div>
+
+	<div id="mobileNav" class="mobileNav collapse" aria-expanded="false">
+		<div class="inner">
+			<nav>
+				<ul>
+					<% if (!isStudent && (typeof userData !== 'undefined') &&
+							userData.messageCenter) {%>
+					<li><a href="<%= paths.messageCenter%>" class="iconNavLink"><span class="iconNavLink__icon-wrapper"><span class="badge badge--in-mobile-nav"><% if ((typeof userData !== 'undefined') &&
+											userData.messageCenter && userData.messageCenter.unreadMessagesCount &&
+											userData.messageCenter.unreadMessagesCount > 0) { %><span class="badge badge--in-mobile-nav">
+					<%= userData.messageCenter.unreadMessagesCount %> <span class="sr-only">messages</span></span>
+									<% } %></span></span>Message Center</a></li>
+					<% } %>
+					<% if (userRole === 'administrator' || userRole === 'concierge') {%>
+					<li>
+						<a href="<%= paths.accountSettings %>" class="iconNavLink">
+							<span class="iconNavLink__icon-wrapper"><i class="icon-gears"></i></span>Settings
+						</a>
+					</li>
+					<li id ="mobileChangeRoleLink">
+						<a href="#" class="iconNavLink change-Role">
+							<span class="iconNavLink__icon-wrapper"></span>Change Role
+						</a>
+					</li>
+					<%}%>
+					<li>
+						<a href="/help" class="iconNavLink"><span class="iconNavLink__icon-wrapper">
+							<i class="icon-help-circle"></i></span>FAQs
+						</a>
+					</li>
+					<!--<li class="active">
+						<a href="https://online-pattern-library.discover.com/my-courses.html#">My Courses</a>
+					</li>
+					<li>
+						<a href="https://online-pattern-library.discover.com/my-courses.html#">My Library</a>
+					</li>-->
+					<% if (typeof marketingSection !== 'undefined') { %>
+					<li>
+						<a href="/marketing" style="text-decoration:none">Marketing Dashboard</a>
+					</li>
+					<% } else if (isStudent){ %>
+					<li>
+						<a href="/my_courses" style="text-decoration:none">My Courses</a>
+					</li>
+					<% if( (typeof customer != 'undefined') && (customer.shoppingListEnabled!=0)){ %>
+					<li>
+						<a href="#" onclick="onShoppingListButtonClick();" style="text-decoration:none">My Materials List</a></li>
+					<% } %>
+					<% } else { %>
+
+					<% if (isAdministrator) { %>
+					<li>
+						<a href="/my_departments" style="text-decoration:none">My Departments</a>
+					</li>
+					<% } %>
+					<% if (userRole === 'concierge' || isAdministrator) {%>
+						<% if (userRole === 'concierge') {%>
+						<li>
+							<a href="/my_courses" style="text-decoration:none">My Courses</a>
+						</li>
+						<li>
+							<a href="#" onclick="loadReport();">My Adoption Dashboard</a>
+						</li>
+						<%} else { %>
+						<li>
+							<a href="#" onclick="loadReport();">My Adoption Dashboard</a>
+						</li>
+
+					<% } %>
+					<%} else { %>
+					<li>
+						<a href="/my_courses" style="text-decoration:none">My Courses</a>
+					</li>
+					<% } %>
+					<li>
+						<a href="/my_library" style="text-decoration:none">My Library</a>
+					</li>
+					<% } %>
+					<li>
+						<div class="mobileNav__logout">
+							<a href="<%= paths.logOut %>" class="btn btn-primary">Log Out</a>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<!-- END Utility Nav module -->
+<!-- BEGIN Primary Nav module -->
+
+
+<% if (!isStudent) { %>
+<div class="primary-search">
+	<form action="/materials/search" method="GET" role="search" id="material-search-form">
+		<span class="caret-down"> </span>
+		<label for="primary-search-input">Search</label>
+		<input type="search" name="query" placeholder="Enter keyword, author, title or 13-digit ISBN"  id="primary-search-input">
+		<input type="submit" value="Go">
+	</form>
+</div>
+<% } %>
+
+
+
+<div class="main-content-container">
+	<%-body -%>
+</div>
+
+<div class="modal_roleChange fade _display_none" id="changeRole" role="dialog" onload="setFocusForModal()" onblur="focusClose()">
+	<div class="modal-dialog_roleChange">
+		<a class="esc" id="close_modal" onblur="setFocusForModal()">x</a>
+		<h3>Select your role for this session:</h3>
+		<div class="button-row-centered" id="change_roles">
+		</div>
+	</div>
+</div>
+
+<footer class="siteFooter">
+	<div class="container">
+		<nav class="siteFooter__nav">
+			<ul>
+				<% if (typeof marketingSection !== 'undefined') { %>
+				<li><a class="" href="/marketing" id="mkt_footer">Marketing Dashboard</a></li>
+				<% } else { %>
+
+				<% if (isAdministrator) { %>
+				<li><a href="/my_departments" id="dep_footer">My Departments</a></li>
+				<li><a class="" href="/my_library" id="lib_footer">My Library</a></li>
+				<% } %>
+				<% if (userRole === 'concierge' || isAdministrator) {%>
+				<% if (userRole === 'concierge') {%>
+					<li>
+						<a href="/my_courses" id="crs_footer">My Courses</a>
+					</li>
+					<li><a class="" href="/my_library" id="lib_footer">My Library</a></li>
+					<li>
+						<a href="#" onclick="loadReport();" id="adp_footer">My Adoption Dashboard</a>
+					</li>
+					<%} else { %>
+					<li>
+						<a href="#" onclick="loadReport();" id="adp_footer" style="text-decoration: underline;">My Adoption Dashboard</a>
+					</li>
+					<% } %>
+				<%} else { %>
+				<li><a class="" href="/my_courses" id="crs_footer">My Courses</a></li>
+
+				<%
+					if(isStudent){
+							if( (typeof customer != 'undefined') && (customer.shoppingListEnabled!=0)){
+				%>
+				<li id="myMaterialList"><a class="navlink" href="#" onclick="onShoppingListButtonClick();">My Materials List</a></li>
+				<%
+							}
+						}
+					else{
+				%>
+				<li><a class="" href="/my_library" id="lib_footer">My Library</a></li>
+				<% } %>
+				<% } %>
+				<% if (!isStudent) { %>
+			<!--	<li><a class="" href="/my_library">My Library</a></li> -->
+				<% } %>
+
+				<li><a class="" href="#" id="hlp_footer">Help</a></li>
+				<% } %>
+
+			</ul>
+		</nav>
+		<div class="siteFooter__copy">Copyright © 2001-2014,  Corporation</div>
+		<div class="siteFooter__legal"><p>All Trademarks belong to  Corporation, its subsidiaries or affiliates, unless otherwise indicated.<br><a href="https://s3.amazonaws.com/ffdu-static-content/_FacultyDiscover_Terms_of_Use_2014-03-05.pdf" target="_blank" id="lgl_footer">View Legal Information</a></p></div>
+		<div class="siteFooter__logo">
+			<a href="https://www..com" target="_new"><img src="/img/logo.png" alt=" Logo"></a>
+		</div>
+	</div>
+</footer>
+
+
+
+<!--Onboard modal starts  -->
+<!--welcome modal starts  -->
+<div class="modal fade" id="modal-welcome-footer" tabindex="-1" role="dialog" aria-labelledby="modal-welcome-title" aria-hidden="true">
+	<div class="modal-dialog" id="onboard_modal_dialog">
+		<div class="modal-content">
+			<button type="button" class="modal-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="icon-close-thin"></i></span></button>
+			<div class="modal-header sr-only">
+				<h4 class="modal-title" id="modal-welcome-title"><span class="sr-only"> Tour</span></h4>
+			</div>
+			<div class="modal-body" id="modal_body_help">
+				<div class="slider with-dots welcome-slider" id="slickDots">
+					<div id="welcomeSlide">
+						<div class="slide slide--mega">
+							<h1 class="slide__title"></h1>
+							<img class="slide__bannerImage" src="" />
+							<div class="slide__content prose prose-large contained-block">
+							</div>
+							<div class="slide__footer stacked-items--btn-link">
+								<div>
+									<a href="#" class="btn btn-primary btn-wide slick-next" id="begin_tour">Begin Tour</a>
+									<a href="#" class="_display_none" id="hiddenBtn">Begin</a>
+								</div>
+								<div>
+									<a href="#" class="text-link" data-dismiss="modal" aria-label="Close">Skip the tour. I&rsquo;ll read this later!</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="onboardSlides">
+						<div class="slide">
+							<h1 class="slide__title">Look up materials for your courses</h1>
+							<div class="slide__content">
+								<div class="slide__img-text-layout">
+									<div class="img-col col-stack-xs" id="onboard_image">
+										<img src="" alt="">
+									</div>
+									<div class="text-col col-stack-xs" id="onboard_content" style="width:200px;">
+										<div class="prose contained-block">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="slide__footer stacked-items--btn-link" style="width:63%; padding-top:20px" id="footer_button">
+                                <div id="footer_element" style="bottom:0; position:absolute !important; top: auto !important;">
+                                    <div>
+                                        <a href="#" class="btn btn-primary btn-wide slick-next">Continue</a>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="text-link" data-dismiss="modal" aria-label="Close">Skip the tour. I&rsquo;ll read this later!</a>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function firstFocus(){
+		window.setTimeout(function ()
+		{
+
+			document.getElementById('home_btn').focus();
+
+
+		}, 0);
+	}
+	function setFocusForModal(){
+		window.setTimeout(function ()
+		{
+
+			document.getElementById('change_roles').focus();
+
+
+		}, 0);
+	}
+	function focusClose(){
+		window.setTimeout(function ()
+		{
+			console.log("blurModal");
+			document.getElementById('close_modal').focus();
+		}, 0);
+	}
+	function dropdownClicked(){
+		window.setTimeout(function ()
+		{
+
+			document.getElementById('help_link').focus();
+
+
+		}, 0);
+	}
+	function dropdownClickedAC(){
+		window.setTimeout(function ()
+		{
+			document.getElementById('settingsLink').focus();
+
+		}, 0);
+	}
+	function dropdownDismissed(){
+		window.setTimeout(function ()
+		{
+
+			$('#myCourses').focus();
+			currentElementId = "profile-actions-dropdown";
+			currentElement.nextElementByTabIndex.focus();
+
+		}, 0);
+	}
+	function dropdownDismissedC(){
+		window.setTimeout(function ()
+		{
+
+			//$('#myAdp').focus();
+
+		}, 0);
+	}
+	function dropdownDismissedA(){
+		window.setTimeout(function ()
+		{
+			$('#myDeptID').focus();
+
+		}, 0);
+	}
+</script>
+
+
+<!-- END Footer module -->
+<!-- END Dashboard Template -->
+<!--[if lt IE 9]>
+<script src="/js/lib/selectivizr.js"></script>
+<![endif]-->
+<!-- <script src="/js/lib/jquery-1.10.2.min.js"></script> -->
+<script src="/js/revamp/lib/jquery.min.js"></script>
+<script src="/js/lib/jquery.throttledresize.min.js"></script>
+<script src="/js/lib/hammer.min.js"></script>
+<script src="/js/lib/jquery.ellipsis.min.js"></script>
+<script src="/js/lib/star-rating.js"></script>
+<!--<script src="/js/authentication/bootstrap.min.js"></script> -->
+<script src="/js/revamp/lib/bootstrap.min.js<%= staticUrlPostfix %>"></script>
+<script src="/js/revamp/lib/scripts.min.js"></script>
+<script src="/js/revamp/lib/vendor.min.js"></script>
+<script src="/js/lib/jquery.tooltipster.min.js"></script>
+<script src="/js/lib/jquery-ui.min.js"></script>
+<script src="/js/global.js<%= staticUrlPostfix %>"></script>
+<script src="/js/common.js<%= staticUrlPostfix %>"></script>
+<script src="/js/utilities/cookies.js<%= staticUrlPostfix %>"></script>
+<script src="/js/utilities/term_select_builder.js<%= staticUrlPostfix %>"></script>
+<script src="/js/onboard/onboard.js<%= staticUrlPostfix %>"></script>
+<script>
+	ffd.subjectsByDiscipline = ffd.parseDisciplinesAndSubjects(<%- JSON.stringify((typeof subjectsByDiscipline !== 'undefined') && subjectsByDiscipline ?  subjectsByDiscipline : {}) %>);
+	ffd.ctStatusMessageMap = <%- JSON.stringify((typeof ctStatusMessageMap !== 'undefined') && ctStatusMessageMap ?  ctStatusMessageMap : {}) %>;
+	ffd.digitalMaterialCode = <%- JSON.stringify((typeof digitalMaterialCode !== 'undefined') && digitalMaterialCode ?  digitalMaterialCode : {}) %>;
+	ffd.onboardTutorial = <%- JSON.stringify((typeof onboardTutorial !== 'undefined') && onboardTutorial ?  onboardTutorial : {}) %>;
+</script>
+<script>
+	ffd.paths = <%-JSON.stringify( paths  || {}) %>;
+	<% var otherUserData = ((typeof userData !== 'undefined') && userData.user && userData.user.data ? userData.user.data : {}) %>
+	ffd.user = {role: '<%-userRole%>', departments: <%-JSON.stringify(otherUserData.departments || []) %> };
+	<%if((typeof userData !== 'undefined') && userData.user ) { %>
+	ffd.userData = <%-JSON.stringify(userData.user) %>;
+	<% } %>
+	<%if(typeof selectedDepartment !== 'undefined') {%>
+	ffd.user.departmentId = <%-'"' + selectedDepartment + '";'%>
+			<%}%>
+
+			<%if (typeof selectedTerm !== 'undefined') {%>
+			ffd.user.termId = <%-'"' + selectedTerm + '";'%>
+					<%}%>
+					ffd.customer = <%- JSON.stringify( (typeof customer !== 'undefined') ? customer : {})%>;
+</script>
+<%-blocks.scripts%>
+<% if ((typeof environment !== 'undefined') && (environment === 'prod')) { %>
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function()
+	{ (i[r].q=i[r].q||[]).push(arguments)}
+			,i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-66281885-1', 'auto');
+	ga('send', 'pageview', {
+		'dimension1': ffd.user && ffd.user.role ? ffd.user.role : 'Unknown role',
+		'dimension2': '<%-typeof userData !== 'undefined' && userData && userData.user && userData.user.nameToLog ? userData.user.nameToLog : 'Unknown user'%>',
+		'dimension3': ffd.customer && ffd.customer.name? ffd.customer.name : 'Unknown customer'
+	});
+
+</script>
+<% } else if ((typeof environment !== 'undefined') && (environment === 'dev')) { %>
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-69070435-1', 'auto', {'allowLinker': true});
+	ga('require', 'linker');
+	ga('linker:autoLink', ['betterknow.com'] );
+	ga('send', 'pageview');;
+
+</script>
+<%} %>
+</body>
+</html>

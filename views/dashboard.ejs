@@ -1,0 +1,665 @@
+<% layout('layout') -%>
+<% block('styles', '<link rel="stylesheet" href="/css/dashboard.css' + staticUrlPostfix + '">') -%>
+
+<!-- BEGIN Course Grouping module -->
+<section class="course-grouping" style="padding-bottom: 10px;">
+	<div class="container">
+		<h2>My Courses</h2>
+		<div class="header-link">
+			<a class="caret-link" href="<%= paths.myCourses %>"><span>Manage Courses &amp; Terms</span></a>
+		</div>
+		<form class="container intro term-department-select-form">
+			<%
+			var otherUserDataForDepartment = userData.user.data || {};
+			var departmentsData = otherUserDataForDepartment.departments || [];
+			%>
+			<% if (isConcierge && departmentsData.length > 1) { %>
+			<div>
+				<label class="concierge-term-select" for="term-select">Select Term:</label>
+				<select class="term-select">
+				</select></div>
+			<% } %>
+			<label class="department-select-label" for="department-select">Select Department:</label>
+			<select class="department-select">
+				<%
+				var otherUserData = userData.user.data || {};
+				var departments = otherUserData.departments || [];
+				%>
+				<%
+				for(var i = 0; i < departments.length; i++) {
+					var department = departments[i];
+				%>
+				<option value="<%=i%>"<% if (department.id === selectedDepartment) { %>selected="selected"<% } %>><%= department.name %></option>
+				<% } %>
+			</select>
+			<% if (isConcierge && departmentsData.length < 2 ) { %>
+			<label class="concierge-term-select" for="term-select">Select Term:</label>
+			<select class="term-select">
+			</select>
+			<% } %>
+			<% if (!isConcierge) { %>
+			<label for="term-select">Select Term:</label>
+			<select class="term-select">
+			</select>
+			<% } %>
+			<% if (isConcierge ) { %>
+			<label class="concierge-course-number-search-or" >OR</label>
+			<label class="concierge-course-number-search-input-text" >Enter Course Number:</label>
+			<input id = "concierge-course-number-search-input" maxlength="20" id="concierge-course-number-search-input" name="concierge-course-number-search-input" type="text" style="color: #666;" placeholder=" Ex. 101, 201L">
+
+			<button class="submit-term-department-button" class="submit-term-department-button" type="button">Update</button>
+			<% } %>
+			<% if (!isConcierge) { %>
+			<button  class="submit-term-department-button" class="submit-term-department-button" type="button">Update</button>
+			<% } %>
+
+			<% if ( isInstructor || (isConcierge && departmentsData.length < 2) ) { %>
+			<div class="share-adoption-checkbox-div">
+				<input class="share-adoption-check" id ="share-adoption-check" type="checkbox" />Share Adopted Materials
+			</div>
+			<% } %>
+
+			<% if ( isConcierge && departmentsData.length > 1 ) { %>
+
+			<div class ="share-adoption-external-div">
+				<div class="share-adoption-checkbox-div">
+					<input class="share-adoption-check" id ="share-adoption-check" type="checkbox" /> Share Adopted Materials
+				</div>
+			</div>
+			<% } %>
+		</form>
+	</div>
+
+	<div id="attestation-modal" class="modal" role="dialog">
+		<div class="modal-dialog own-modal-dialog" id="attestation-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<form>
+
+					<button type="button" class="modal-close" id="closeButton" aria-label="Close"><span aria-hidden="true"><i class="icon-close-thin"></i></span></button>
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-attestation-title">Adoption Request</h4>
+					</div>
+
+					<div class="modal-body" id="attestation_body">
+
+						<div class="modal-scrollable-content block-spaced">
+							<div class="block prose">
+								<p><strong>By visiting this site, you accept the information use practices described below. These practices are subject to change. Any changes will be posted on this site and will govern the use of information collected after such postings. We reserve the right to make changes to these terms. Any changes will be posted and will apply only to your use after such posting. If you visit our site, you accept these terms and conditions. </strong></p>
+								<ol>
+									<li>
+										<h4>License:</h4>
+										<p>We grant you a limited license to access our site for your internal business purpose only. Any commercial use, use in violation of the policy of any school represented on the site, or use for data collection and/or profit is not allowed. You are prohibited from using any data mining, robots, or other data gathering tools on this site.</p>
+									</li>
+									<li>
+										<h4>Copyright:</h4>
+										<p>All content on this site, including text, graphics, images, data compilations, lists and software, is the property of  Higher Education Group, Inc. or its licensors and is protected by U.S. and international copyright law. Downloading, printing, copying, distributing or using the contents of any pages in the site in any manner inconsistent with the license granted above and without prior written consent from  is prohibited.</p>
+									</li>
+									<li>
+										<h4>Trademarks:</h4>
+										<p>(r), e(r), edoption(r), ePartner(tm), Rent-A-Text and the other trademarks used on the site are the property of  or a third party who may or may not be affiliated with or sponsored by . You agree not to use the trademarks in any manner that is likely to cause confusion or infringes upon the ownership rights of  or such third party. </p>
+									</li>
+									<li>
+										<h4>Links:</h4>
+										<p> is not responsible for the goods and services, or content of any linked site that is not under 's control. Fol lett will not be liable for any damages caused by your use of or reliance on such goods and services or content.</p>
+									</li>
+									<li>
+										<h4>Arbitration:</h4>
+										<p>You agree to submit any dispute, controversy or claim you may have arising out of or relating to the use of this site solely to binding arbitration in Chicago, Illinois, to be conducted pursuant to the Commercial Rules of the American Arbitration then in effect. </p>
+									</li>
+									<li>
+										<h4>Disclaimer and Limitation of Liability:</h4>
+										<p>Except for the warranties and representations made on the site, TO THE EXTENT PERMITTED BY APPLICABLE LAW,  PROVIDES THIS SITE "AS IS," AND DISCLAIMS ANY AND ALL WARRANTIES, EXPRESS OR IMPLIED, AS TO THE AVAILABILITY OR CONTENT OF THE SITE, OR THE PRODUCTS AND SERVICES PROVIDED BY THE SITE, INCLUDING, WITHOUT LIMITATION, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  DOES NOT WARRANT OR REPRESENT THAT THIS SITE WILL BE FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.  WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL OR PUNITIVE DAMAGES ARISING FROM USE OF THE SITE. THE DISCLAIMERS AND LIMITATIONS HEREIN MAY NOT APPLY IN CERTAIN STATES. CERTAIN STATE LAWS DO NOT ALLOW LIMITATIONS ON IMPLIED WARRANTIES OR THE EXCLUSION OR LIMITATION OF CERTAIN DAMAGES. IF THESE LAWS APPLY TO YOU, SOME OR ALL OF THE ABOVE DISCLAIMERS, EXCLUSIONS, OR LIMITATIONS MAY NOT APPLY TO YOU, AND YOU MIGHT HAVE ADDITIONAL RIGHTS. </p>
+									</li>
+								</ol>
+							</div>
+							<div class="block prose-additional">
+								<div class="prose">
+									<p><strong>In compliance with State Board Rule 6A-14.092 Textbook Affordability and Section 1004.085, Florida Statutes, I attest for all textbooks and other instructional items that I am adopting will be used, particularly each individual item sold as part of a bundled package, and I have evaluated and confirmed the significant value of changing to a new edition(if applicable) as the prior edition has changed significantly and substantively.</strong></p>
+								</div>
+								<!--<div class="block block-spaced form-group">
+									<div class="option-item option-item&#45;&#45;checkbox option-item&#45;&#45;right-input option-item&#45;&#45;checked-success">
+										<input type="checkbox" name="accept-terms" id="exampleInput1" value="accept-terms_option1" class="enableSubmit__input">
+										<label for="exampleInput1">I accept these terms</label>
+									</div>
+								</div>-->
+								<div class="terms-check">
+									I accept these terms <input type="checkbox" name="terms" id="termCheck">
+								</div>
+							</div>
+						</div>
+
+						<hr/>
+						<div class="button-row">
+							<button  class="btn btn-primary btn-wide enableSubmit__submit" type="button" id="submit_adoption_request">Submit Adoption Request</button>
+							<button type="button" class="cancel" id="cancelButton">Cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="card-list-container" class="container">
+		<div class="share-adoption-header share-adoptions-component">
+			<div class="title">Share Adopted Materials <button class="selectAll" type="button" style = "width:72px">Select All</button> <button class="clearAll"type="button" style = "width:66px">Clear All</button> </div>
+			<hr/>
+			<div class="description">Select the course(s) you want to share. A list of adopted course materials for the course(s) you select will be sent to your receipient(s) via email. </div>
+			<div class="title-small">Select Courses</div>
+		</div>
+		<div class="share-adoption-course-list">
+			<ul class="general-page-loading loading-animation"><li></li><li></li><li></li></ul>
+			<ul class="card-list container _display_none">
+				<!-- BEGIN Course Card module -->
+				<li class="col-md-4 col-sm-6 col-xs-12">
+					<div class="course-grouping-div" data-course-id="" data-discipline-id="">
+						<h3 >Biology 101 – 00005</h3>
+						<!--<input class="share-adoptions-check share-adoptions-component" type="checkbox"/>-->
+						<ul class="loading-animation"><li></li><li></li><li></li></ul>
+						<div class="course-card-content-holder _display_none">
+							<p class="jumbo">Start Discovering course materials today.</p>
+							<a class="caret-link top-link" href="/courses/:courseId"><span>manage course</span></a>
+							<input class="isbn-input" type="text", placeholder="13-digit ISBN" maxlength="13"/>
+							<button class="quick-adopt-button" type="button">ADOPT</button>
+							<div class="no-materials-block">
+								<img src="img/no_materials_selected.png"/>
+								<p class="no-materials-text">No materials required</p>
+							</div>
+							<ul class="mat-list">
+								<li><a href="/courses/microbiology/materials/microbiology02/details"><div><img src="img/microbiology-book02.jpg" /></div><h4>Microbiology An Evolving Science</h4></a></li>
+							</ul>
+							<a class="caret-link" href="/courses/microbiology/materials"><span>View all 12 materials</span></a>
+							<div class="concierge-bottom-container"></div>
+							<div class="course-cta">
+								<select class="discipline-select" id="select-discipline">
+									<option value="">Select Discipline</option>
+								</select>
+								<select class="subject-select inactive" disabled="disabled" id="select-subject">
+									<option value="">Select Subject</option>
+								</select>
+								<a class="cta inactive" href="/courses/biology101/discover" disabled="disabled">Discover for this course</a>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="share-adoption-footer share-adoptions-component">
+			<hr/>
+			<div class="title-small">Enter your recipient(s) email addresses</div>
+			<input type="textbox" id="email-list" placeholder=" bsmith@email.com, jbrown@email.com " class="email-box"/>
+			<div class="email-box-disclaimer">If you want to send to multiple recipients, separate email list with a comma.</div>
+			<hr/>
+			<!--<a class="send" href="#">Send to Recipient(s)</a>-->
+			<button class="send" type="button" disabled="disabled">Send to Recipient(s)</button>
+			<a class="cancel" id="cancelSendRecipientId" href="#" >Cancel</a>
+		</div>
+		<div id="statusModal" class="modal" role="dialog">
+			<div class="modal-dialog own-modal-dialog" id="status_dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<form>
+						<div class="modal-header" id="status_header">
+							<button type="button" class="close" data-dismiss="modal" id="closeButton">&times;</button>
+							<span id="closeText">Close</span>
+						</div>
+						<div class="modal-body" id="status_body">
+							<div class="throbber-container"><div class="throbber" id="modal-throbber"></div></div>
+							<div class="statusModalText"></div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="page container action-modules">
+	<% if (isConcierge) { %>
+	<!--<div class="col-md-4 col-xs-12 action-module add-content">
+			<h2>Add Title</h2>
+			<p>Add title not found in Search.</p>
+			<a href="<%= paths.renderAddTitle %>" class="cta add-title">ADD</a>
+		</div>-->
+	<!-- BEGIN Action Module component -->
+	<div class="col-md-4 col-md-offset-4 col-xs-12 action-module">
+		<h2>Add From Library</h2>
+		<p>Adopt items from past terms or your library.</p>
+		<label for="add-from-library" class="visuallyhidden">Adopt items from past terms or your library</label>
+		<a class="cta" id="add-from-library" href="<%= paths.getCopyMaterials %>?from=library">Copy</a>
+	</div>
+	<!-- END Action Module component -->
+	<% } %>
+	<% if (isInstructor) { %>
+	<!--<div class="col-md-4 col-xs-12 action-module add-content">
+    		<h2>Add Title</h2>
+    		<p>Add title not found in Search.</p>
+    		<a href="<%= paths.renderAddTitle %>" class="cta add-title">ADD</a>
+    	</div>-->
+	<!-- BEGIN Action Module component -->
+	<div class="col-md-4 col-md-offset-2 col-xs-12 action-module">
+		<h2>Add From Library</h2>
+		<p>Adopt items from past terms or your library.</p>
+		<label for="add-from-library" class="visuallyhidden">Adopt items from past terms or your library</label>
+		<a class="cta" id="add-from-library" href="<%= paths.getCopyMaterials %>?from=library">Copy</a>
+	</div>
+	<!-- END Action Module component -->
+	<% } %>
+	<% //if ((isInstructor || isConcierge) && customer && customer.EduEnabled) {
+	if ((isInstructor) && customer && customer.EduEnabled) {
+		var exists = 0;
+		var ids = JSON.parse(realms);
+		while (ids.length > 0) {
+			var check = ids.pop();
+			if (customer.id == check) {
+				exists++;
+			}
+		}
+	if (exists < 1) { %>
+	<div class="col-md-4 col-xs-12 action-module add-content">
+		<h2>Create Content</h2>
+		<p>Create course packs and clear copyright.</p>
+		<label for="create-course-packs" class="visuallyhidden">Create course packs and clear copyright</label>
+		<a href="/materials/create" class="cta create-course-material" id="create-course-packs">Create</a>
+	</div>
+	<% } %>
+	<% } %>
+</div>
+<section class="inset-section-shadow"></section>
+
+
+<!-- BEGIN Course Grouping module -->
+
+<!--
+<div class="mobileSiteHeader visible-xs">
+	<div class="inner">
+		<a class="mobileSiteHeader__nav-trigger mobileSiteHeader__action mobileSiteHeader__action&#45;&#45;left" data-toggle="collapse" data-target="#mobileNav" aria-expanded="false">
+			<i class="icon-bars expanded-hide"></i>
+			<i class="icon-close-thin expanded-show"></i>
+		</a>
+		<div class="mobileSiteHeader__logo">
+			<a href="https://online-pattern-library.discover.com/"><img src="./img/logo-header.png" alt=" | Discover" class="siteHeader__info__logo">
+				<h1 class="siteHeader__info__university">Arizona State University</h1>
+			</a>
+		</div>
+		<div class="mobileSiteHeader__search-wrapper">
+			<div class="input-with-icon-wrapper has-icon-left">
+				<input type="text" id="input-with-btn" name="input-with-btn" class="form-control" placeholder="Enter keyword, author, title or ISBN">
+				<div class="icon-wrapper">
+					<i class="icon-search"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="mobileNav" class="mobileNav collapse" aria-expanded="false">
+		<div class="inner">
+			<nav>
+				<ul>
+					<li><a href="https://online-pattern-library.discover.com/my-courses.html#" class="iconNavLink"><span class="iconNavLink__icon-wrapper"><span class="badge badge&#45;&#45;in-mobile-nav">31</span></span>Message Center</a></li>
+					<li><a href="https://online-pattern-library.discover.com/my-courses.html#" class="iconNavLink"><span class="iconNavLink__icon-wrapper"><i class="icon-gears"></i></span>Settings</a></li>
+					<li><a href="https://online-pattern-library.discover.com/my-courses.html#" class="iconNavLink"><span class="iconNavLink__icon-wrapper"><i class="icon-help-circle"></i></span>FAQs</a></li>
+					<li class="active"><a href="https://online-pattern-library.discover.com/my-courses.html#">My Courses</a></li><li><a href="https://online-pattern-library.discover.com/my-courses.html#">My Library</a></li>
+					<li>
+						<div class="mobileNav__logout">
+							<a href="https://online-pattern-library.discover.com/my-courses.html#" class="btn btn-primary">Log Out</a>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+
+<div class="page-content">
+	<div class="container">
+
+
+		&lt;!&ndash; Style guide > Page header &ndash;&gt;
+		<div class="content-header content-header&#45;&#45;page-header">
+			<div class="content-header__inner">
+				<div>
+					<h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>My Courses</h1>
+				</div>
+				<div>
+					<a href="https://online-pattern-library.discover.com/my-courses.html#" class="text-link">Manage Courses &amp; Terms</a>
+				</div>
+			</div>
+		</div>
+
+
+		&lt;!&ndash; Style guide > Content Header (alt) &ndash;&gt;
+		<div class="content-header content-header&#45;&#45;align-bottom ">
+			<div class="content-header__inner">
+				<div>
+					<div class="form-group input-width&#45;&#45;compact">
+						<label for="select">Select Term</label>
+						<div class="styled-select">
+							<select id="select" name="select" class="form-control">
+								<option value="">Select...</option>
+								<option value="1">Option 1</option>
+								<option value="2">Option 2</option>
+								<option value="3">Option 3</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div>
+					<button class="btn btn-secondary-alt btn-with-icon"><i class="icon-email"></i><span>Share</span></button>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="layout-cards-grid responsive-compress-inner-cards">
+			<div>
+				<div class="card card&#45;&#45;subject">
+					<div class="card__inner">
+						<div class="card__header">
+							<h1 class="card__title" style="word-wrap: break-word; white-space: normal;">Biology 8000</h1>
+							<div class="card__subtitle">B8000/BIOA8000.2015SP</div>
+						</div>
+						<div class="card__body">
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">
+											Campbell Biology (w/out Mastering Biology Organic Biology
+										</h2>
+										<span class="lozenge  is-pending">Pending</span>
+									</div>
+								</div>
+							</div>
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">Microbiology Laboratory Theory &amp; Appl: Brief Ed (LL)</h2>
+										<span class="lozenge  is-adopted">Adopted</span>
+									</div>
+								</div>
+							</div>
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">
+											Astronomy: Beginner’s Guide to Using and Exploring the cosmos and the cosmos and the cosmos
+										</h2>
+										<span class="lozenge  is-rejected">Rejected</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card__footer">
+							<div class="inner">
+								<div class="stacked-items&#45;&#45;link-btn">
+									<a href="https://online-pattern-library.discover.com/my-courses.html#" class="text-link">View all 6 materials</a>
+									<a href="https://online-pattern-library.discover.com/my-courses.html#" class="btn btn-block btn-primary">Discover for this course</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="card card&#45;&#45;standout card&#45;&#45;subject card&#45;&#45;subject&#45;&#45;empty enableSubmit">
+					<div class="card__inner">
+						<div class="card__header">
+							<h1 class="card__title" style="word-wrap: break-word; white-space: normal;">Biology 8000</h1>
+							<div class="card__subtitle">B8000/BIOA8000.2015SP</div>
+						</div>
+						<div class="card__body">
+							<div class="card__prompt">
+								<div class="prompt">
+									<div class="prompt__header">
+										<h2>You haven’t adopted learning materials for this course yet</h2>
+										<p>Click “Discover Materials” to find learning materials for this course.</p>
+									</div>
+									<div class="prompt__body">
+										<div class="form-group">
+											<label for="subject">Subject</label>
+											<div class="styled-select">
+												<select id="subject" name="subject" class="form-control enableSubmit__input">
+													<option value="">English</option>
+													<option value="1">Option 1</option>
+													<option value="2">Option 2</option>
+													<option value="3">Option 3</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="discipline">Discipline</label>
+											<div class="styled-select">
+												<select id="discipline" name="discipline" class="form-control enableSubmit__input">
+													<option value="">Select...</option>
+													<option value="1">Option 1</option>
+													<option value="2">Option 2</option>
+													<option value="3">Option 3</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card__footer">
+							<div class="inner">
+								<button class="btn btn-block btn-primary enableSubmit__submit" disabled="">Discover for this course</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="card card&#45;&#45;subject">
+					<div class="card__inner">
+						<div class="card__header">
+							<h1 class="card__title" style="word-wrap: break-word; white-space: normal;">Biology 8000</h1>
+							<div class="card__subtitle">B8000/BIOA8000.2015SP</div>
+						</div>
+						<div class="card__body">
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">
+											Campbell Biology (w/out Mastering Biology Organic Biology
+										</h2>
+										<span class="lozenge  is-pending">Pending</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card__footer">
+							<div class="inner">
+								<a href="https://online-pattern-library.discover.com/my-courses.html#" class="btn btn-block btn-primary">Discover for this course</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="card card&#45;&#45;standout card&#45;&#45;subject card&#45;&#45;subject&#45;&#45;empty">
+					<div class="card__inner">
+						<div class="card__header">
+							<h1 class="card__title" style="word-wrap: break-word; white-space: normal;">Biology 8000</h1>
+							<div class="card__subtitle">B8000/BIOA8000.2015SP</div>
+						</div>
+						<div class="card__body">
+							<div class="card__prompt">
+								<div class="prompt">
+									<div class="prompt__header">
+										<h2>You haven’t adopted learning materials for this course yet</h2>
+										<p>Click “Discover Materials” to find learning materials for this course.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card__footer">
+							<div class="inner">
+								<a href="https://online-pattern-library.discover.com/my-courses.html#" class="btn btn-block btn-primary">Discover for this course</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="card card&#45;&#45;subject">
+					<div class="card__inner">
+						<div class="card__header">
+							<h1 class="card__title" style="word-wrap: break-word; white-space: normal;">Biology 8000</h1>
+							<div class="card__subtitle">B8000/BIOA8000.2015SP</div>
+						</div>
+						<div class="card__body">
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">
+											Campbell Biology (w/out Mastering Biology Organic Biology
+										</h2>
+										<span class="lozenge  is-pending">Pending</span>
+									</div>
+								</div>
+							</div>
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">Microbiology Laboratory Theory &amp; Appl: Brief Ed (LL)</h2>
+										<span class="lozenge  is-adopted">Adopted</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card__footer">
+							<div class="inner">
+								<a href="https://online-pattern-library.discover.com/my-courses.html#" class="btn btn-block btn-primary">Discover for this course</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="card card&#45;&#45;subject">
+					<div class="card__inner">
+						<div class="card__header">
+							<h1 class="card__title" style="word-wrap: break-word; white-space: normal;">Biology 8000</h1>
+							<div class="card__subtitle">B8000/BIOA8000.2015SP</div>
+						</div>
+						<div class="card__body">
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">
+											Campbell Biology (w/out Mastering Biology Organic Biology
+										</h2>
+										<span class="lozenge  is-pending">Pending</span>
+									</div>
+								</div>
+							</div>
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">Microbiology Laboratory Theory &amp; Appl: Brief Ed (LL)</h2>
+										<span class="lozenge  is-adopted">Adopted</span>
+									</div>
+								</div>
+							</div>
+							<div class="card__body__content">
+								<div class="book book&#45;&#45;summary">
+									<div class="book__image-col">
+										<img src="./img/56x77" alt="" class="book__image">
+									</div>
+									<div class="book__text-col">
+										<h2 class="book__title" style="word-wrap: break-word;">
+											Astronomy: Beginner’s Guide to Using and Exploring the cosmos and the cosmos and the cosmos
+										</h2>
+										<span class="lozenge  is-rejected">Rejected</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card__footer">
+							<div class="inner">
+								<a href="https://online-pattern-library.discover.com/my-courses.html#" class="btn btn-block btn-primary">Discover for this course</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+<div class="prompt-row prompt-row&#45;&#45;text">
+	<div class="container">
+		<div class="prompt-row__content prompt-row__content&#45;&#45;3col">
+			<div>
+				<div>
+					<h2 class="prompt-row__title">Add Title</h2>
+					<div class="prompt-row__body prose">Add title not found in Search.</div>
+					<button class="prompt-row__action btn btn-secondary">Add</button>
+				</div>
+				<div>
+					<h2 class="prompt-row__title">Add from Library</h2>
+					<div class="prompt-row__body prose">Adopt items from past terms or your library.</div>
+					<button class="prompt-row__action btn btn-secondary">Copy</button>
+				</div>
+				<div>
+					<h2 class="prompt-row__title">Create Content</h2>
+					<div class="prompt-row__body prose">Create course packs and clear copyright.</div>
+					<button class="prompt-row__action btn btn-secondary">Create</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+-->
+
+<!--<div class="prompt-row prompt-row&#45;&#45;image prompt-row&#45;&#45;image&#45;&#45;darken prompt-row&#45;&#45;image&#45;&#45;right" style="background-image: url("../img/promo-left-large02.png");">
+	<div class="container">
+		<a href="https://online-pattern-library.discover.com/my-courses.html#" class="prompt-row__large-icon"><span class="icon-circle-bg icon-circle-bg&#45;&#45;large icon-circle-bg&#45;&#45;white-line"><i class="icon-control-play"></i></span></a>
+		<h2 class="prompt-row__title-large">Take a quick tour of  Discover</h2>
+		<button class="prompt-row__action btn btn-secondary-alt-light btn-wide">Watch Video</button>
+	</div>
+</div>-->
+
+<!-- END Course Grouping module -->
+<!-- BEGIN Promotional Area module -->
+<section class="promotional-area container">
+	<div class="promotional-main-container">
+		<h2 >TAKE&nbsp;A&nbsp;QUICK&nbsp;TOUR <br/>OF&nbsp;&nbsp;DISCOVER   </h2>
+
+		<a class="cta white" href="http://.com/discover/login.cfm" target="new" >WATCH VIDEO</a>
+	</div>
+</section>
+
+<!-- END Promotional Area module -->
+<% block('scripts', '<script src="/js/dashboard.js'+ staticUrlPostfix + '"></script>') -%>
+<% block('scripts', '<script>ffd.terms = ' + JSON.stringify(terms) + ';' + '</script>') -%>
+<% block('scripts', '<script src="/js/adoption_report/jquery.blockUI.js'+ staticUrlPostfix + '"></script>') -%>
+<% block('scripts', '<script src="/js/lib/bootbox.min.js'+ staticUrlPostfix + '"></script>') -%>
