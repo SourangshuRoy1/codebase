@@ -1,0 +1,294 @@
+<% layout('../layout') -%>
+
+<!-- END Primary Nav module -->
+
+
+<style>
+
+    @media only screen
+    and (min-device-width : 767px) {
+
+        .card__inner{
+            width: 60%
+        }
+        .col1{
+            width: 30%
+        }
+    }
+
+    @media only screen
+    and (max-device-width : 767px) {
+
+        .card__inner{
+            width: 100%
+        }
+        .col1{
+            width: 100%
+        }
+       #material-file-upload .circle-or{
+           margin-left: 120px;
+       }
+        #material-link-file-label, #uploadButton input[type=button],#uploadButton input[type=text]{
+           margin-left: 30px;
+       }
+    }
+
+#fakeBrowse{
+    color: #3e4457;
+}
+section.create-section label input[type=text], textarea{
+    border-radius: 4px;
+}
+.cancel{
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: underline;
+    text-transform: none;
+    margin-left: 10px;
+    float: right;
+    margin-top:40px;
+}
+.cancel > a:after {
+    content: none;
+}
+.add-material-form-submit-btn{
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: open sans;
+    text-transform: none;
+    background: #036cd5;
+    background: -moz-linear-gradient(top, #036cd5 0, #036cd5 100%);
+    background: -webkit-linear-gradient(top, #036cd5 0, #036cd5 100%);
+    background: -ms-linear-gradient(top, #036cd5 0, #036cd5 100%);
+    background: linear-gradient(to bottom, #036cd5 0, #036cd5 100%);
+    border-radius: 4px;
+    float: left;
+}
+
+.add-material-form-submit-btn:active, .add-material-form-submit-btn:focus,  .add-material-form-submit-btn:hover{
+    color: #fff;
+    text-decoration: none;
+    line-height: none;
+}
+section.create-section label textarea{
+    width: 95.5%;
+}
+section.create-section label > span, #material-access-heading{
+    font-family: open sans;
+    font-weight: 600;
+    font-size: 16px;
+    padding-bottom: 10px;
+    color: #3e4457;
+    }
+.container h3, p{
+    font-family: open sans;
+    line-height: 1.3;
+    font-size: 13px;
+    text-align: justify;
+}
+section.create-section label{
+    font-family: open sans;
+    font-size: 16px;
+    font-weight: 600;
+    }
+.card__inner.col label{
+    word-wrap: break-word;
+}
+#type-of-material p{
+    margin-bottom: 20px;
+}
+    .content-header__inner h1,dd{
+        font-family: open sans;
+    }
+</style>
+
+
+<div class="breadcrumbs-wrapper">
+    <div class="container breadcrumbs">
+        <ol>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <li><a class="navlink" href="<%- pageReferrer %>" style="text-decoration:none">Adopted Course Materials</a></li>
+            <li class="active" style="font-weight: bold">Add My Content</li>
+        </ol>
+    </div>
+</div>
+
+<!--<div class="page-title magenta box-shadow">
+    <h2 class="container">Add My Content</h2>
+    <p class="intro container">Upload and create course materials, including links or files.</p>
+</div>-->
+<div class="page-content">
+    <div class="container">
+            <div class="content-header content-header--page-header" style="margin:0 0 30px">
+                <div class="content-header__inner">
+                    <div>
+                        <h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>Add My Content</h1>
+                        <dl class="subject-header__info dl dl--stacked" style="margin-top:20px">
+                            <dd>Upload and create course materials, including links or files.</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+
+<div class="container add-materials">
+    <form action="#" id="create-materials-form" class="_display_none">
+        <section class="create-section" id="type-of-material" style="border-bottom:0;">
+            <p class="error-msg-top" role="alert"></p>
+            <label for="material-link-url" id="material-link-url-label">
+                <!--<span>Link to Existing Material</span>-->
+                <p class="error-msg">This required field needs to be filled </p>
+                <input type="text" id="material-link-url" class="required" name="create-material-info" placeholder="URL">
+            </label>
+            <div id="material-file-upload">
+                <img src="/img/circle-or-01.jpg" alt="or" class="circle-or">
+                <label for="material-link-file" id="material-link-file-label">
+                    <span>Upload Materials <span style="color:#666"> (5MB limit)</span></span>
+                    <p class="error-msg">This required field needs to be filled</p>
+                    <input type="file" id="material-link-file" name="create-material-info" style="display: none" onChange="Handlechange();" />
+                    <div id="uploadButton">
+                    <input type="button" class="prompt-row__action btn btn-secondary" name="filename" value="Choose File" onclick="HandleBrowseClick();"/>
+                        <input type="text" id="fakeBrowse" value="No file chosen" style="border: transparent; width:400px" readonly tabindex="-1">
+                        </div>
+
+                </label>
+            </div>
+            <div class="form-box" style="border-top:0; margin-bottom: 50px">
+                <label for="material-file-title" id="material-file-title-label">
+                    <span>Title <span class="optional">(optional)</span></span>
+                    <input type="text" maxlength="500" id="material-file-title" name="create-material-title">
+                </label></div>
+            <div class="form-box1">
+                <label for="material-file-description" id="material-file-description-label" style="margin-left:0">
+                    <span>Description <span class="optional">(optional)</span></span>
+                    <textarea id="material-file-description" aria-multiline="true" name="create-material-description"></textarea>
+                </label>
+            </div>
+        </section>
+        <section class="create-section" tabindex="0" aria-labelledby="material-access-heading" style="border-bottom:0">
+           <!-- <h3 id="material-access-heading">Who can access this material?</h3>-->
+            <h3 id="material-access-heading">Make This Material Available To:</h3>
+<!--
+
+            <div class="card__inner" style="width: 70%">
+                <div class="card__body is-compact">
+                    <div class="card&#45;&#45;selectable__layout">
+                        <div class="col">
+                            <div class="option-item option-item&#45;&#45;checkbox option-item&#45;&#45;centered option-item&#45;&#45;spaced">
+                               &lt;!&ndash; <input type="checkbox" class="course-checkbox" name="create-material-access">&ndash;&gt;
+                                <label for="material-access-everyone">
+                                    <input type="radio" id="material-access-everyone" name="create-material-access" checked>Everyone
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <p>By selecting everyone, all users of  Discover can view and adopt your material.</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+-->
+            <div class="card__inner" style="padding: 15px;">
+                <div class="card__body is-compact">
+            <div class="card&#45;&#45;selectable__layout">
+            <div class="col1">
+            <label for="material-access-everyone"  data-placement="left" style="display:inline">
+                <input type="radio" id="material-access-everyone" name="create-material-access" checked>Everyone
+            </label>
+            </div>
+                <div class="col">
+                <p>By selecting Everyone, all users of  Discover can view and adopt your material.</p>
+               </div>
+                </div>
+                    </div>
+                    </div>
+
+            <br>
+
+            <div class="card__inner" style=" padding: 15px;">
+                <div class="card__body is-compact">
+                    <div class="card&#45;&#45;selectable__layout">
+                        <div class="col1">
+            <label for="material-access-students" style="display:inline" data-placement="left">
+                <input type="radio" id="material-access-students" name="create-material-access">My students
+            </label>
+                        </div>
+                        <div class="col">
+                            <p>By selecting My Students, only your students will have access to view this content.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <section class="create-section checkbox-group required course-list" tabindex="0" aria-labelledby="material-courses-heading">
+            <h3 id="material-courses-heading">What courses would you like to add this material to?</h3>
+            <p class="error-msg">At least one checkbox needs to be checked</p>
+
+            <label for="material-course-1">
+                <input type="checkbox" id="material-course-1" name="create-material-course" checked>Fall 2014 – Biology – 00005
+            </label>
+
+            <label for="material-course-2">
+                <input type="checkbox" id="material-course-2" name="create-material-course">Fall 2014 – Biology – 00006
+            </label>
+
+            <label for="material-course-3">
+                <input type="checkbox" id="material-course-3" name="create-material-course">Fall 2014 – Biology – 00007
+            </label>
+
+        </section>
+        <section class="create-section checkbox-group required" style="border-bottom:0;">
+            <div class="terms">
+                <div class="container" style="padding-right: 40px">
+                    <h3>Terms &amp; Conditions</h3>
+                    <p>By submitting or posting materials (&quot;Instructor Content&quot;) you expressly agree that you are solely responsible for publishing this content for your students and that you have all rights necessary to post Instructor Content to the site for third party viewing and use. You understand and acknowledge that you are solely responsible for this content that you are uploading and sharing through . You understand that it is your responsibility to verify the copyright and ensure that this content may be shared with your students. Specifically, you represent and warrant that you have all rights necessary to post Instructor Content to the site for your students’ viewing and use. You agree to hold the , including its agents, employees, parent and affiliated companies, harmless from any and all claims of liability of any kind arising out of or related to this content. You agree to hold the Institution, including its agents and employees, harmless from any and all claims of liability of any kind arising out of or related to this content.  will have no obligations with respect to the Instructor Content except as set forth in the Terms of Use. Posting or transmitting Instructor Content automatically grants  a world-wide, non-exclusive license to use, reproduce, modify, publish, translate, prepare derivative works based upon, distribute, perform or display such Instructor Content, in whole or in part in any form, media or technology known or hereafter developed solely for the purpose of distribution to your students, and you are not entitled to any compensation in connection with such uses by . You hereby waive any and all claims against  for any alleged or actual infringements of any rights of privacy or publicity, moral rights, rights of attribution or any other intellectual property rights in connection with ’s use and publication of such Instructor Content as described herein.</p>
+                    <p class="uppercase">Please note this link is not where you submit materials for copyright clearance and inclusion in a coursepack. to submit material for copyright clearance and inclusion in a coursepack please contact your local  Campus Store.</p>
+                </div>
+            </div>
+            <label for="material-terms-agree" id="material-terms-agree-label">
+                <p class="error-msg">Before submitting any information, please agree to the following terms and conditions</p>
+                <input type="checkbox" id="material-terms-agree" name="material-term-agree">
+                I agree to the above terms &amp; conditions.
+            </label>
+        </section>
+        <div style="width:150px"><input type="submit" value="Add" class="cta-button">
+            <a class="cancel" style="float:left">Cancel</a></div>
+    </form>
+</div>
+</div>
+    </div>
+<div class="prompt-row prompt-row--image prompt-row--image--darken promotional-banner-area" >
+    <div class="container">
+        <!--<a href="http://.com/discover/login.cfm" class="prompt-row__large-icon"><span class="icon-circle-bg icon-circle-bg&#45;&#45;large icon-circle-bg&#45;&#45;white-line"><i class="icon-control-play"></i></span></a>-->
+        <h2 class="prompt-row__title-large">Take a quick tour of  Discover</h2>
+        <a href="http://.com/discover/login.cfm" class="prompt-row__action btn btn-secondary-alt-light btn-wide" target="new">Watch Video</a>
+    </div>
+</div>
+
+<script language="JavaScript" type="text/javascript">
+
+    function HandleBrowseClick()
+    {
+        var fileinput1 = document.getElementById("material-link-file");
+        fileinput1.click();
+    }
+    function Handlechange()
+    {
+        var fileinput1 = document.getElementById("material-link-file");
+        var textinput = document.getElementById("fakeBrowse");
+        var fullfilename= fileinput1.value;
+        var list = fullfilename.split('\\')
+        var filename=list[list.length -1]
+        if(filename.length>0){
+            textinput.value = filename;
+        }else{
+            textinput.value ="No file chosen";
+        }
+
+       /* alert(textinput.value);*/
+    }
+</script>
+
+<% block('scripts', '<script>ffd.pageData = ' + JSON.stringify(pageData) + '; ffd.pageReferrer = ' + JSON.stringify(pageReferrer) + ';</script> <script src="/js/add.js'+ staticUrlPostfix + '"></script>') -%>
