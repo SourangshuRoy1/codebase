@@ -1,0 +1,685 @@
+<% layout('../layout') -%>
+<% block('styles', '<link rel="stylesheet" href="/css/material_details.css' + staticUrlPostfix + '">') -%>
+<!-- END Primary Nav module -->
+<style>
+#rental{
+    text-decoration:underline;
+}
+@media only screen
+and (max-device-width : 767px) {
+
+	#header_page{
+		padding-left: 17px;
+	}
+	.tooltiptext2{
+		right:-20px;
+		top:35px;
+	}
+	.tooltiptext{
+		right:-5px;
+	}
+}
+
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+
+	.table--first-col-full tr > :first-child{
+		text-align: left;
+	}
+	.table--first-col-full tr > :last-child{
+		text-align:right;
+	}
+	.text-link.text-link--with-icon.text-link--small{
+		margin-left: 75px;
+	}
+}
+
+#tooltip2 {
+	position: relative;
+	display: inline-block;
+}
+
+/* Tooltip text */
+#tooltip2 .tooltiptext2 {
+	visibility: hidden;
+	width: 70px;
+	background-color: #d6e2e6;
+	color: #152235;
+	text-align: center;
+	padding: 2px 0;
+	position: absolute;
+	z-index: 1;
+	border-radius: 1px;
+	margin:5px;
+	font-size: 12px;
+	border: 1px solid #152235;
+
+}
+
+#tooltip2:hover .tooltiptext2 {
+	visibility: visible;
+}
+
+.text-link.text-link--with-icon.text-link--small{
+	margin-left: 27%;
+}
+
+.cancel{
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.4;
+	text-decoration: underline;
+	text-transform: none;
+}
+ #requestIncludedModal{
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #cccccc;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+	box-sizing: border-box;
+	margin: 0 auto;
+	padding: 30px;
+	position: relative;
+	width: 600px;
+	max-width: 100%;
+	min-height: 160px;
+	top: 30%;
+	z-index: 1050;
+}
+#requestIncludedModal h3{
+	font-family:open sans;
+	line-height: 1.42857143;
+}
+#requestIncludedModal btn{
+	font-family:open sans;
+}
+</style>
+<div class="breadcrumbs-wrapper">
+	<div class="container breadcrumbs">
+		<ol><% if(typeof referrerTypeVal != 'undefined'){ %>
+		    <% if(referrerTypeVal === "my_courses"){ %>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <li class="active" style="font-weight: bold">Course Material Details</li>
+            <%} else if(referrerTypeVal === "details"){ %>
+            <% if(courseAssoc) { %>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <li><a class="navlink" href="<%- courseLink %>" style="text-decoration:none">Adopted Course Materials</a></li>
+            <li><a class="navlink" href="<%- referrerUrl %>" style="text-decoration:none">Related Course Material Details</a></li>
+            <li class="active" style="font-weight: bold">Course Material Details</li>
+            <% } else { %>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <li><a class="navlink" href="<%- referrerUrl %>" style="text-decoration:none">Related Material Details</a></li>
+            <li class="active" style="font-weight: bold">Material Details</li>
+            <% } %>
+		    <%} else if(referrerTypeVal === "discover"){ %>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <li><a class="navlink" href="<%- paths.discoverCourse.replace(':courseId', courseId) %>" style="text-decoration:none">Discover Course Materials</a></li>
+            <li class="active" style="font-weight: bold">Course Material Details</li>
+            <%} else if(referrerTypeVal === "copy"){ %>
+            <li><a class="navlink" href="<%- referrerUrl %>" style="text-decoration:none">Copy Materials</a></li>
+            <% if(courseId) { %>
+            <li class="active" style="font-weight: bold">Course Material Details</li>
+            <% } else { %>
+            <li class="active" style="font-weight: bold">Material Details</li>
+            <% } %>
+		    <%}else if(referrerTypeVal === "specificCourse"){ %>
+			<li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+			<li><a class="navlink" href="<%- paths.specificCourse.replace(':courseId', courseId) %>" style="text-decoration:none">Adopted Course Materials</a></li>
+            <li class="active" style="font-weight: bold">Course Material Details</li>
+            <%}else if(referrerTypeVal === "search"){ %>
+            <% pageData.referrer = "search"; %>
+            <li><a class="navlink" href="<%- referrerUrl %>" style="text-decoration:none">Search Results</a></li>
+            <% if(courseAssoc) { %>
+            <li class="active" style="font-weight: bold">Course Material Details</li>
+            <% } else { %>
+            <li class="active" style="font-weight: bold">Material Details</li>
+            <% } %>
+            <%}else if(referrerTypeVal === "my_library"){ %>
+            <% pageData.referrer = "my_library"; %>
+            <li><a class="navlink" href="<%- referrerUrl %>" style="text-decoration:none">My Library</a></li>
+            <li class="active" style="font-weight: bold">Material Details</li>
+            <%}else if(referrerTypeVal === "manageCourses"){ %>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <li class="active" style="font-weight: bold">Material Details</li>
+            <%} else if(referrerTypeVal === "manageAdoptionForNoCourse"){ %>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <li class="active" style="font-weight: bold">Material Details</li>
+            <%}else if(referrerTypeVal === "create"){ %>
+            <li><a class="navlink" href="/my_courses" style="text-decoration:none">My Courses</a></li>
+            <% if(courseId){ %>
+            <li><a class="navlink" href="<%- paths.specificCourse.replace(':courseId', courseId) %>" style="text-decoration:none">Adopted Course Materials</a></li>
+            <% } %>
+            <li class="active" style="font-weight: bold">Course Material Details</li>
+            <%}else if(referrerTypeVal === "pre_approve"){ %>
+            <% pageData.referrer = ''; %>
+            <li><a class="navlink" href="<%- referrerUrl %>" style="text-decoration:none">Pre-approve Material</a></li>
+            <li class="active" style="font-weight: bold">Material Details</li>
+            <% } %>
+            <% } %>
+		</ol>
+	</div>
+</div>
+<div class="page-content">
+   <div class="container" id="materialContainer">
+      <!-- Style guide > Page header -->
+      <div class="content-header content-header&#45;&#45;page-header">
+			<div class="content-header__inner" id="pageTitle">
+			<% if (!isStudent && referrerTypeVal !== "my_library" && referrerTypeVal !== "search") { %>
+				<div>
+					<h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>Course Material Details</h1>
+				</div>
+			<% } else { %>
+				<div>
+                    <h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>Material Details</h1>
+                </div>
+            <% } %>
+			</div>
+	  </div>
+      <!-- <h1><i class="icon-circle-bg"><i class="icon-book-open-2"></i></i>Course Material Details</h1> -->
+      <% if (!isStudent && referrerTypeVal !== "my_library" && referrerTypeVal !== "search" && !courseAssoc) { %>
+              <div class="content-header content-header--align-middle  content-header--subject" style="border-bottom: 0px solid #e6e6e6">
+                  <div class="content-header__innerc" id="subjectDisciplineDropdown" style="border-bottom: 1px solid #e6e6e6;">
+                      <div>
+                          <div class="subject-header" id="header_page">
+							  <% if(pageData.course && pageData.course){%>
+							  <h2 class="subject-header__title"><%= pageData.course.description %></h2>
+							  <div class="subject-header__subtitle"><%= pageData.course.shortName %></div>
+							  <% } %>
+                              <dl class="subject-header__info dl dl--stacked" id="discipline_subject_noDropDown" style="margin-bottom:10px;margin-top:20px">
+                                  <dt>Discipline: </dt>
+                                  <dd id="dd_discipline"></dd>
+                                  <dt>Subject: </dt>
+                                  <dd id="dd_subject"></dd>
+                              </dl>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          <% } %>
+
+          <%  if(!isStudent && referrerTypeVal !== "my_library" && referrerTypeVal == "search") { %>
+				<div class="content-header content-header--align-middle  content-header--subject" style="border-bottom: 0px solid #e6e6e6;border-top: 0px solid #e6e6e6">
+					<div class="content-header__innerc" id="subjectDisciplineDropdown" style="border-bottom: 0px solid #e6e6e6;">
+
+					</div>
+				</div>
+	      <% } %>
+
+<ul class="general-page-loading loading-animation"><li></li><li></li><li></li></ul>
+		<div class="inner" id="MaterialDetails">
+			<div class="book-detail-layout container _display_none">
+			<div class="col-stack-xs main-col">
+			<div class="book book--detailed-large">
+			    <div class="book__text-col">
+                	<h1 class="book__title"></h1>
+                	<div class="book__edition"></div>
+                </div>
+				<div class="book__image-col">
+					<img src="" alt="" class="book__image">
+						<div class="block-spaced text-center"></div>
+						<!-- <a href="#" target="_blank" class="btn btn-secondary btn-wide">View BryteWave version</a> -->
+				</div>
+
+				<div class="book__text-col">
+                		<dl class="book__meta-dl dl dl--stacked dl--large">
+                			<dt id="format_lbl">Format:</dt>
+                			<dd class="format"></dd>
+                			<dt id="author_lbl">Author(s):</dt>
+                			<dd><p class="author"></p></dd>
+                			<dt>Publisher:</dt>
+                			<p class="publisher" style="display:inline"></p>
+                		</dl>
+                		        <ul class="book__isbn">
+                        			<li><strong id="isbn13_lbl">ISBN-13:</strong> <p class="isbn-13" style="display:inline"></p></li>
+                        			<li><strong>ISBN-10:</strong> <p class="isbn-10" style="display:inline"></p></li>
+                        		</ul>
+                        		<div class="book__description prose contained-block">
+                        			<strong>Description: </strong><p class="description" style="display:inline"></p>
+                        		</div>
+                        		<div class="book__rating">
+                                			<div class="nowrap spaced">
+                                				<div class="star-rating read-only lg" data-value="0" ></div>
+                                                    <a href="#" id="viewReview" class="text-link-alt"></a>
+                                			</div>
+                        		</div>
+
+								<div class="book__badges">
+                        			<ul class="badge-list">
+                        				<li class="book-badge book-badge--rental" id="rentalIcon">Rental</li>
+                        				<p class="rental" id="rental" style="text-decoration: none !important;"></p>
+                        				<!--<p class="rental_msg" id="rental_msg"></p>-->
+                        				<li class="book-badge book-badge--brytewave" id="brtIcon">Brytewave</li>
+                        				<p class="brytewave" id="brytewave"></p>
+                        				<li class="book-badge book-badge--pre-approved" >Pre Approved</li>
+                        				<p class="preApproved" id="preApproved"></p>
+                        				<p class="included" id="included"></p>
+                        			</ul>
+                        		</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-stack-xs side-col">
+			<div class="card card--standout" id="rightContainer">
+
+
+						<p class="card__super-header">Pricing</p>
+						<div class="card__inner" id="card__inner">
+						<div class="card__body is-open">
+						<table class="table table--first-col-full table--pricing">
+						<tbody>
+
+								<tr id="new">
+									<th>New</th>
+									<td id="retailNewPrice">$129.99</td>
+								</tr>
+								<tr id="used">
+									<th>Used</th>
+									<td id="retailUsedPrice">$1429.99</td>
+								</tr>
+
+								<tr id="rentalNew">
+									<th>Rental New</th>
+									<td id="rentalNewPrice">$29.99</td>
+								</tr>
+								<tr class="table--pricing__cheapest" id="rentalUsed">
+									<th>Rental Used</th>
+									<td id="rentalUsedPrice">$92.99</td>
+								</tr>
+								<tr id="digital">
+                                	<th>
+                                	    Digital <img class="table__logo" id="digitalPriceLogo" src="/img/bryte.png" alt="">
+                                	</th>
+                                	<td id="digitalPrice"><span>$129.99</span></td>
+                                </tr>
+
+
+
+						</tbody>
+						</table>
+
+						<!--<div>
+                        	<div class="pricing-footer">
+                        	<div class="dollar-sign">$</div>
+                        	<div class="message">Save your students some money!</div>
+                        	</div>
+                        </div>-->
+
+                        <div class="block-spaced stacked-items--spaced text-center" id="save_money_lbl">
+				        <div class="icon-text-group t-default">
+					            <i class="icon-dollar-sign icon--lg"></i>
+					            <span>Save your students some money!</span>
+				        </div>
+
+						</div>
+						<!--</div> -->
+
+
+		</div>
+
+
+		</div>
+				<div class="block-spaced-lg enableSubmit" id="deptSelectionArea">
+                    <div class="form-group">
+                        <label class="department-select-label" for="department-select">Select Department:</label>
+                        <div class="styled-select">
+                            <select class="form-control" id="deptSelection">
+                                <%
+                                var otherUserData = userData.user.data || {};
+                                var departments = otherUserData.departments || [];
+                                var flow = 'witoutCourse';
+                                %>
+                                <%
+                                for(var i = 0; i < departments.length; i++) {
+                                    var department = departments[i];
+                                %>
+                                <option value="<%=i%>"<% if (department.id === selectedDepartment) {
+                                flow = 'withCourse';
+                                %>
+                                selected="selected"
+                                <%} %>
+                                >
+                                <%= department.name %></option>
+                                <% } if(flow === 'witoutCourse'){ %>
+                                    <option value="<%=departments.length%>" selected="selected">Select Department</option>
+                                    <% }  %>
+
+              							</select>
+                						</div>
+                					</div>
+                				</div>
+
+
+                				<div id="preApproveMsg" style=" border: solid 1px;
+                                    border-color: rgb(191, 192, 213);
+                                    background-color: rgb(207, 219, 237);
+                                    padding: 5px;"><span style="
+                                    font-size: 12px;">You are not allowed to adopt this material for course(s) with "Pre-approved only" restriction.</span></div>
+
+
+		</div>
+			<div class="block-spaced-lg enableSubmit" id="statusDropdown">
+
+			</div>
+			<div class="stacked-items--btn-link">
+
+			</div>
+			<div class="text-divider">
+				<span>or</span>
+			</div>
+			<div class="block-spaced-lg">
+				<div class="inputWithIcon">
+					<div>
+						<button class="btn btn-secondary-alt btn-block">Manage Adoption for <br>Multiple Courses</button>
+					</div>
+					<div class="inputWithIcon__info">
+						<i class="icon-infomation-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="Text here"style="cursor: pointer;" id="tooltip2"> <span class="tooltiptext2">Click the link to adopt material to multiple courses.</span></i>
+					</div>
+				</div>
+			</div>
+				<!--<div class="clr"></div>
+				<div class="adopt-btn">
+					<a href="<%- paths.adoptMaterial.replace(':materialId', materialId) %>" class="cta">Adopt</a><button class="cta secondary">Add to library</button>
+				</div>-->
+			<!--</div>-->
+		</div>
+<!--	<img class="mobile thumb" src="" alt="" />
+	<img class="thumb" src="" alt="" />
+	----change -----
+	-->
+
+
+	</div>
+
+<!-- Material details section end-->
+
+<!-- Related item from publisher  section starts-->
+
+
+<!-- BEGIN Rating and Reviews Area module -->
+<%if(pageData == 'Unable to get associated materials'){%>
+ <section class="page-section accordion-panel-xs">
+ <h2><%=pageData%></h2>
+ </section>
+<% } %>
+
+<%if(relatedMaterialList && relatedMaterialList.relatedFromPublisher.length>0){%>
+  <section class="page-section accordion-panel-xs">
+  	<h2 class="page-section__header accordion-panel-xs__trigger" data-toggle="collapse" data-target="#related-materials" class="collapsed" aria-expanded="false">
+  		<span class="accordion-panel-xs__trigger__layout">
+  			<span>
+  				<span class="accordion-panel-xs__trigger__header">Related Items from the Publisher (<%=relatedMaterialList.relatedFromPublisher.length%>)</span>
+  			</span>
+  			<span>
+  				<i class="toggle-caret"></i>
+  			</span>
+  		</span>
+  	</h2>
+  	<div id="related-materials" class="collapse page-section__body" aria-expanded="false">
+  		<div class="accordion-panel-xs__content">
+  			<div class="row slider with-arrows cards-slider responsive-compress-inner-cards responsive-compress-inner-cards--xs-extra">
+  				 <%for(i=0;i<relatedMaterialList.relatedFromPublisher.length;i++){
+  				 material = relatedMaterialList.relatedFromPublisher;
+  				 authorStr = '';%>
+                  		<div class="col-sm-12 col-stack-xs">
+                  		    <div class="card card--book card--grouped-sections">
+                  			    <div class="card card--book card--grouped-sections">
+                  	            <div class="card__inner">
+                  		        <div class="card__header">
+                  			<h1 class="card__title"><%= material[i].title%></h1>
+                  			<div class="card__subtitle"><strong>ISBN:</strong> <%= material[i].isbn13%></div>
+                  		</div>
+                  		<div class="card__body">
+                  			<div class="book book--detailed">
+                  				<div class="book__image-col">
+                  					<img src="<%= material[i].image%>" alt="" class="book__image">
+                  					<div class="book__format"><%= material[i].format%></div>
+                  				</div>
+                  				<div class="book__text-col">
+                  					<div class="book__edition">
+                  					<%if(material[i].edition){%>
+                  						<strong><%= material[i].edition%> Edition</strong>
+                  					<% } %>
+                  					</div>
+                  					<div class="book__source">
+                  					<% for(k=0;k<material[i].author.length;k++){
+                  					authorStr = material[i].author[k]+','+authorStr;
+                  					}%>
+                  						<strong>Author(s):</strong><%=authorStr.substring(0,authorStr.length-1)%>
+                  					</div>
+                  					<div class="book__source">
+                  						<strong>Publisher:</strong>
+                  						<%if(material[i].impn){%>
+                  						<%= material[i].impn%>
+                  						<%} %>
+
+                  					</div>
+                  					<div class="book__source">
+
+                  					<%if(material[i].edition && material[i].priceStartingAt && material[i].priceStartingAt != ''){%>
+										<strong>Starting Price:</strong> $<%= material[i].priceStartingAt%>
+                  				    <% } %>
+                  					</div>
+                  					<div class="book__rating">
+                  						<div class="star-rating read-only md" data-value="<%= material[i].rating%>"></div>
+                  					</div>
+                  					<div class="book__badges">
+                  						<ul class="badge-list">
+                  						<%if(material[i].rentable == 'available'){%>
+                  							<li class="book-badge book-badge--rental">Rental</li>
+                  						<%}%>
+
+                  						<%if(material[i].espId == 'VSBW'){%>
+                                          	<li class="book-badge book-badge--brytewave">Brytewave</li>
+                                       <%}%>
+
+                  				    <%if(material[i].preApproved){%>
+                                         <li class="book-badge book-badge--pre-approved"></li>
+                               <%}%>
+  						</ul>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  		<div class="card__footer">
+  			<div class="inner">
+  				<a href="<%=(courseId && courseId.length > 0? paths.courseMaterialDetails.replace(':courseId',courseId).replace(':materialId',  material[i].isbn13) : paths.materialDetails.replace(':materialId',  material[i].isbn13))%>" class="btn btn-block btn-primary">View Details</a>
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  					</div>
+  				</div>
+  				<% } %>
+  			</div>
+  		</div>
+  	</div>
+  </section>
+<% } %>
+<!-- Related item from publisher section ends-->
+
+
+<!-- Other instructors also adopted section starts-->
+<%if(relatedMaterialList && relatedMaterialList.otherInstructorsAdopted.length>0){%>
+<section class="page-section accordion-panel-xs">
+	<h2 class="page-section__header accordion-panel-xs__trigger" data-toggle="collapse" data-target="#other-instructors-adopted" class="collapsed" aria-expanded="false">
+		<span class="accordion-panel-xs__trigger__layout">
+			<span>
+				<span class="accordion-panel-xs__trigger__header">Other Instructors Also Adopted (<%=relatedMaterialList.otherInstructorsAdopted.length%>)</span>
+			</span>
+			<span>
+				<i class="toggle-caret"></i>
+			</span>
+		</span>
+	</h2>
+	<div id="other-instructors-adopted" class="collapse page-section__body" aria-expanded="false">
+		<div class="accordion-panel-xs__content">
+			<div class="row slider with-arrows col4-slider">
+
+		 <%for(i=0;i<relatedMaterialList.otherInstructorsAdopted.length;i++){
+          				 relatedMaterial = relatedMaterialList.otherInstructorsAdopted;
+          				 authorStr='';%>
+				<div class="col-sm-12 col-stack-xs">
+					<div class="card card--book card--book--small card--grouped-sections">
+	<div class="card__inner">
+		<div class="card__header">
+			<h1 class="card__title"><%=relatedMaterial[i].title%> </h1>
+			<div class="card__subtitle"><strong>ISBN:</strong> <%=relatedMaterial[i].isbn13%></div>
+		</div>
+		<div class="card__body">
+			<div class="book book--detailed is-compact">
+				<div class="book__image-col">
+					<img src="<%=relatedMaterial[i].image%>">
+					<div class="book__format"><%=relatedMaterial[i].format%></div>
+				</div>
+				<div class="book__text-col">
+					<div class="book__edition"><strong>
+					<%if(relatedMaterial[i].edition){%>
+						<%=relatedMaterial[i].edition%> Edition
+					<%}%></strong>
+					</div>
+
+					<div class="book__source">
+					<% for(k=0;k<relatedMaterial[i].author.length;k++){
+                    authorStr =  relatedMaterial[i].author[k]+','+authorStr;
+                     }%>
+					<strong>Author(s):</strong> <%=authorStr.substring(0,authorStr.length-1)%>
+					</div>
+					<div class="book__source">
+						<strong>Publisher:</strong><%=relatedMaterial[i].impn%>
+					</div>
+					<div class="book__source">
+
+							<%if(relatedMaterial[i].edition && relatedMaterial[i].priceStartingAt != ''){%>
+						<strong>Starting Price:</strong>$<%=relatedMaterial[i].priceStartingAt%>
+						<% } %>
+					</div>
+					<div class="book__rating">
+						<div class="star-rating read-only sm" data-value="<%=relatedMaterial[i].rating%>"></div>
+					</div>
+					<div class="book__badges">
+                      <ul class="badge-list">
+                       <%if(relatedMaterial[i].rentable == 'available'){%>
+                           <li class="book-badge book-badge--rental">Rental</li>
+                         <%}%>
+                         <%if(relatedMaterial[i].espId == 'VSBW'){%>
+                           <li class="book-badge book-badge--brytewave">Brytewave</li>
+                            <%}%>
+                    <%if(relatedMaterial[i].preApproved){%>
+                               <li class="book-badge book-badge--pre-approved">Pre Approved</li>
+                        <%}%>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card__footer">
+			<div class="inner">
+				<a href="<%=(courseId && courseId.length > 0? paths.courseMaterialDetails.replace(':courseId',courseId).replace(':materialId',  relatedMaterial[i].isbn13) : paths.materialDetails.replace(':materialId',  relatedMaterial[i].isbn13))%>" class="btn btn-block btn-primary btn-sm">View Details</a>
+			</div>
+		</div>
+	</div>
+</div>
+				</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+</section>
+<% } %>
+<!-- Others instructors adopted section end -->
+
+<!-- Reviews section starts -->
+
+<section class="page-section" id="reviewSection">
+	<h2 class="page-section__header"></h2>
+	<div class="reviews">
+	<div class="reviews__header">
+		<div class="star-rating mega read-only" data-value="0"></div>
+		<div class="text">Share your thoughts with others, <button  data-toggle="collapse" data-target="#write-a-review" class="text-toggle collapsed" aria-expanded="false">Write a review</button></div>
+		<div id="reviewError"><h2 style='color: red';></h2></div>
+		<div id="write-a-review" class="collapse" aria-expanded="false">
+			<form class="write-review-form" action="#" id="ratings-reviews-form">
+				<div class="form-group">
+					<div class="star-rating mega" data-value="0"></div>
+				</div>
+				<div class="form-group">
+                	<input type="text" class="form-control" placeholder="Title" id="review-title" name="create-review-title" />
+                </div>
+				<div class="form-group">
+					<textarea class="form-control" placeholder="Write your review here" id="review-description" aria-multiline="true" name="create-review-description"></textarea>
+				</div>
+				<div class="text-right">
+					<button class="btn btn-primary" type="submit" style="margin-right: 20px" id="submitId">Submit</button>
+					<a href="#" data-toggle="collapse" id="removeEditLink" class="cancel" style="text-decoration: underline; cursor: pointer">Cancel</a>
+
+				</div>
+			</form>
+		</div>
+	</div>
+	<ul class="reviews__list" id="defaultList">
+		<li>
+			<div class="review" id="sampleReview1">
+				<div class="review__header">
+					<div class="review__rating star-rating lg read-only" data-value="2"></div>
+					<h3 class="review__title"></h3>
+				</div>
+				<div class="review__body block prose">
+					<p></p>
+
+				</div>
+			</div>
+		</li>
+
+	</ul>
+	<div id="view-all-reviews" class="reviews__extra collapse" aria-expanded="false">
+		<ul class="reviews__list" id="moreReviewList">
+			<li>
+				<div class="review" id="sampleReview2">
+					<div class="review__header">
+						<div class="review__rating star-rating lg read-only" data-value="2"></div>
+						<h3 class="review__title"></h3>
+					</div>
+					<div class="review__body block prose">
+						<p></p>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+<!--	<button class="btn btn-primary btn-wide collapsed reviews__footer"  id="viewAllReviews" data-toggle="collapse" data-target="#view-all-reviews"  aria-expanded="false">View All Reviews</button>-->
+</div>
+
+</section>
+<!-- Reviews section ends -->
+    </div>
+</div>
+
+
+<!--<div class="prompt-row prompt-row&#45;&#45;text">
+	<div class="container">
+		<div class="prompt-row__content">
+			<div>
+				<div>
+					<h2 class="prompt-row__title">Add from Library</h2>
+					<div class="prompt-row__body prose">Adopt items from past terms or your library.</div>
+					<button class="prompt-row__action btn btn-secondary">Copy</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>-->
+
+<div class="material-remove fade _display_none" id="removeMaterial" role="dialog">
+	<div class="material-remove-dialog">
+		<a class="esc" id="close_modal">x</a>
+		<h3 style="margin-bottom:20px;">Remove this material from adopted course list?</h3>
+		<div class="material-remove-options">
+        <!--<a id="materialRemoveYes" >Yes</a>
+        <a id="materialRemoveNo" >No</a>-->
+			<button type="button" class="btn btn-primary" id="materialRemoveYes" style="margin-left : 80px; margin-top : 15px">Yes</button>
+			<button type="button" class="btn btn-primary" id="materialRemoveNo" style="margin-left : 80px; margin-top : 15px">No</button>
+		</div>
+	</div>
+</div>
+
+
+<% block('scripts', '<script>ffd.pageData = ' + JSON.stringify(pageData || {}) + '; ffd.terms = ' + JSON.stringify(terms) + '; ffd.courses = ' + JSON.stringify(courses) + '; ffd.courseId = "' + (courseId || '') + '";ffd.relatedMaterialList = ' + JSON.stringify(relatedMaterialList || {}) + ';</script> <script src="/js/material_details.js'+ staticUrlPostfix + '"></script>') -%>
