@@ -1,0 +1,20 @@
+# Introduction
+This is a personal POC application and uses NodeJS alongwith JQuery and has views written in EJS to provide a UI.
+
+This application emulates Retail Bookstores for provisioning books and study materials as per list prepared by instructors for college/University semester syllabus. Instructors can upload custom study materials and adopt published books, for each Course in a Semester, while Students can view and procure items using the same portal. A conceirge login is provided who can perform the reponsibilities of multiple instructors. Department Administrators can set up Courses and pre-approve study materials for a course and manage Department related actions.
+
+# Sections
+
+Controllers- The controllers layer has the main application logic for different features of the portal designed in NodeJS
+
+Data_access- The data_access layer has the logic to communicate with a PERL application which in turn performs database layer integration. The database used is MongoDB. (Note: This repository does not contain the PERL application)
+
+Public- This contains all UI handling logic using JQuery.
+
+Views- The views layer is written in EJS and has the view part of UI. The views layer also contains the styles in CSS folder.
+
+Utilities- This layer contains all Routing logic and Path information.
+
+# Server
+
+The NodeJS server runs at port 3000
